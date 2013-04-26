@@ -1,7 +1,7 @@
 Avsys+SensemakerFinal
 ===========
 
-collaboration of Chewy and Firm
+collaboration of Chewy, Yinan and Firm
 
 A series of performance tools for audio/visual performance jamming
 
