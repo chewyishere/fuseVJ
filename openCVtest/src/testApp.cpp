@@ -119,19 +119,21 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	
-    ofColor (255);
+//    ofColor (255);
 	//ofBackgroundGradient(dark, ofColor::black);
     
-    for (int i = 0; i < particles.size(); i++){
-		particles[i]->draw();
-	}
-    
+    ofSetColor(255);
     videoDiffMHI.draw(50, 50);
 	videoGrayscaleCvImage.draw(20,20, 100,80);
 	videoPrevFrameImage.draw(20, 120, 100, 80);
 	videoDiffImage.draw(20,220,100,80);
     ofEnableAlphaBlending();
     panel.draw();
+    
+    for (int i = 0; i < particles.size(); i++){
+		particles[i]->draw();
+	}
+
 
 }
 
