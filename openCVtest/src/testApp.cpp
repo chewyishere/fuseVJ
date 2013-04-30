@@ -46,6 +46,7 @@ void testApp::setup(){
         myParticle->setInitialCondition(ofRandom(0,ofGetWidth()),ofRandom(0,ofGetHeight()),0,0);
 		particles.push_back(myParticle);
 		
+        
 	}
 
 }
@@ -78,6 +79,34 @@ void testApp::update(){
 	}
 	
     
+    int nPointsToCheck = 100;
+    int nThresholdForNewTriangle = 230;
+    
+    unsigned char * pixels = videoDiffMHI.getPixels();
+    
+    for (int i = 0; i < nPointsToCheck; i++){
+        
+        int randomW = ofRandom(0, videoDiffMHI.getWidth()-1);
+        int randomH = ofRandom(0, videoDiffMHI.getHeight()-1);
+        
+        if (pixels[ (int)(randomH * videoDiffMHI.getWidth() + randomW) ] > nThresholdForNewTriangle){
+            
+            float w = ofMap(randomW, 0, videoDiffMHI.getWidth(), 0, ofGetWidth());
+            float h = ofMap(randomH, 0, videoDiffMHI.getHeight(), 0, ofGetHeight());
+            
+            particle * myParticle = new particle;
+            myParticle->setInitialCondition(w,h,0,0);
+            particles.push_back(myParticle);
+            
+            if (particles.size() > PARTICLE_NUM){
+                particle * temp = particles[0];
+                particles.erase(particles.begin());
+            }
+            
+        }
+        
+    }
+
     
     // sort all the particles:
 	sort( particles.begin(), particles.end(), comparisonFunction );
