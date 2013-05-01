@@ -119,8 +119,8 @@ void testApp::update(){
 		for (int j = i-1; j >= 0; j--){
 			if ( fabs(particles[j]->pos.x - particles[i]->pos.x) >	50) break;
             if (i != j){
-                particles[i]->addForFlocking(*particles[j]);
-            }
+               particles[i]->addForFlocking(*particles[j]);
+           }
 		}
         particles[i]->addRepulsionForce(mouseX, mouseY, 40, 0.4);
 	}
