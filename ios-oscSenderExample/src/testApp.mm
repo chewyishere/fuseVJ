@@ -83,6 +83,14 @@ void testApp::draw(){
     background.setHsb(inX, inY, 255);
 	ofBackground(background);
     
+    ofxOscMessage m;
+    m.setAddress( "/hue" );
+    m.addFloatArg( inX );
+    m.setAddress( "/sat" );
+    m.addFloatArg( inY );
+    sender.sendMessage( m );
+    
+    
 	// display instructions
 	string buf;
 	buf = "sending osc messages to" + string( HOST ) + ofToString( PORT );
