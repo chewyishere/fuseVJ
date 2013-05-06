@@ -1,4 +1,4 @@
-#define PARTICLE_NUM 1000
+#define PARTICLE_NUM 500
 
 #ifndef _TEST_APP
 #define _TEST_APP
@@ -6,11 +6,9 @@
 #include "ofMain.h"
 #include "particle.h"
 #include "ofxControlPanel.h"
+
 #include "ofxOsc.h"
-
-
-#define HOST "localhost"
-#define PORT 10001
+#define PORT 12345
 #define NUM_MSG_STRINGS 20
 
 class testApp : public ofSimpleApp{
@@ -20,6 +18,8 @@ class testApp : public ofSimpleApp{
 		void setup();
 		void update();
 		void draw();
+    
+        void drawFboTest();
 		
 		void keyPressed  (int key);
 		void keyReleased (int key);
@@ -32,29 +32,23 @@ class testApp : public ofSimpleApp{
 		// let's make a vector of them
 		vector <particle *> particles;
 	
+        //ctrl panel
 		ofxControlPanel panel;
-        ofxControlPanel Abletonpanel;
-	    ofxOscReceiver receiver;
-    	//ofxOscSender sender;
+	
+        //fbo
+        ofFbo rgbaFboFloat;
+        ofFbo rgbaFbo;
+        int fadeAmnt;
 		 
-        ofTrueTypeFont font;
-    
+    //osc
+    ofxOscReceiver receiver;
     int current_msg_string;
     string msg_strings[NUM_MSG_STRINGS];
     float timers[NUM_MSG_STRINGS];
-    
-    float Vmelody;
-    float Emelody;
-    float Vdrum;
-    float Edrum;
-    float Vbase;
-    float Ebase;
-    float FX1;
-    float FX2;
-    float FX3;
 
-	float ClockPosition;
+    float Vbase, Vmelody, Edrum, Ebase, Emelody;
     
+	
 };
 
 #endif

@@ -14,9 +14,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-               BuildableName = "oscRecieverAbleton.app"
-               BlueprintName = "oscRecieverAbleton"
-               ReferencedContainer = "container:oscRecieverAbleton.xcodeproj">
+               BuildableName = "v5_flockAudienceOSC2.app"
+               BlueprintName = "v5_flockAudienceOSC2"
+               ReferencedContainer = "container:v5_flockAudienceOSC2.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,9 +32,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-            BuildableName = "oscRecieverAbleton.app"
-            BlueprintName = "oscRecieverAbleton"
-            ReferencedContainer = "container:oscRecieverAbleton.xcodeproj">
+            BuildableName = "v5_flockAudienceOSC2.app"
+            BlueprintName = "v5_flockAudienceOSC2"
+            ReferencedContainer = "container:v5_flockAudienceOSC2.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -44,16 +44,15 @@
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
-      ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-            BuildableName = "oscRecieverAbleton.app"
-            BlueprintName = "oscRecieverAbleton"
-            ReferencedContainer = "container:oscRecieverAbleton.xcodeproj">
+            BuildableName = "v5_flockAudienceOSC2.app"
+            BlueprintName = "v5_flockAudienceOSC2"
+            ReferencedContainer = "container:v5_flockAudienceOSC2.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -69,9 +68,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-            BuildableName = "oscRecieverAbleton.app"
-            BlueprintName = "oscRecieverAbleton"
-            ReferencedContainer = "container:oscRecieverAbleton.xcodeproj">
+            BuildableName = "v5_flockAudienceOSC2.app"
+            BlueprintName = "v5_flockAudienceOSC2"
+            ReferencedContainer = "container:v5_flockAudienceOSC2.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

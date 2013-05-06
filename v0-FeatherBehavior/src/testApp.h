@@ -1,6 +1,6 @@
 #ifndef _TEST_APP
 #define _TEST_APP
-#define RECT_NUM 150  // how to change???
+#define RECT_NUM 150  
 
 #include "ofMain.h"
 #include "timePoint.h"

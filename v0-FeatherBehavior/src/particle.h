@@ -1,10 +1,5 @@
-//
-//  feather.h
-//  English Suite
-//
+
 //  Created by QIUYI on 12/12/12.
-//
-//
 
 #ifndef __English_Suite__feather__
 #define __English_Suite__feather__
