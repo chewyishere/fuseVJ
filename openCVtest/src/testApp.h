@@ -1,11 +1,12 @@
 #ifndef _TEST_APP
 #define _TEST_APP
-#define PARTICLE_NUM 1000
+#define PARTICLE_NUM 300
 
 #include "ofMain.h"
 #include "ofxOpenCv.h"
 #include "ofxControlPanel.h"
 #include "particle.h"
+#include "timePoint.h"
 
 class testApp : public ofBaseApp{
 
@@ -13,6 +14,8 @@ class testApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+    
+        void drawFboTest();
 
 		void keyPressed  (int key);
 		void keyReleased(int key);
@@ -35,8 +38,34 @@ class testApp : public ofBaseApp{
 		ofxCvGrayscaleImage		videoDiffMHI;
 	
     // particles
-    vector <particle *> particles;
+
+    int number;
+    
+    bool	bRepel;
+    float	radius;
+    float	strength;
 	
+
+    
+    
+    vector < timePoint > pts;
+    float startTime;
+    
+    vector <particle *> particles;
+   // vector <particle *> particles2;
+    particle myParticle;
+    particle myParticle2;
+    
+    ofVec2f oldM;
+    bool    bPaint, bObstacle, bBounding, bClear;
+        
+    //fbo
+    ofFbo rgbaFboFloat;
+    ofFbo rgbaFbo;
+    int fadeAmnt;
+    
+    //audio
+
 };
 
 #endif

@@ -19,8 +19,7 @@ typedef struct{
 class flockingForce {
 	public:
 	
-	int			count;
-	ofVec2f	sum;
+ ` r  	ofVec2f	sum;
 	float		distance;
 	float		strength;
 	
@@ -37,6 +36,10 @@ class particle{
         ofPoint frc;   // frc is also know as acceleration (newton says "f=ma")
         ofPoint prevPos;
 			
+        float age;
+    
+    
+    
         particle();
 		virtual ~particle(){};
 
@@ -71,6 +74,9 @@ class particle{
         float size;
         float r,g,b;
         ofColor c;
+    
+    float scale;
+    float r1, r2, r3;
 
     protected:
     private:

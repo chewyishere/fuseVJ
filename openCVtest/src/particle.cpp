@@ -1,21 +1,24 @@
 #include "particle.h"
 #include "ofMain.h"
-
+#include "timePoint.h"
 
 //------------------------------------------------------------
 particle::particle(){
 	setInitialCondition(0,0,0,0);
-	damping	= 0.01f;
+	damping	= 0.5f;
 	
 	seperation.distance		= 20;
 	alignment.distance		= 80;
 	cohesion.distance		= 40;
 	
-	seperation.strength		= .03;
+	seperation.strength		= .3;
     alignment.strength		= .015;
 	cohesion.strength		= .015;
     
     size = 0;
+    scale = 5;
+    r1=r2=r3=1;
+    age = ofGetElapsedTimef();
 	
 }
 
@@ -334,7 +337,7 @@ void particle::draw(){
 	
 	ofNoFill();
     ofSetColor(80);
-	ofCircle(pos.x, pos.y, 3);
+//	ofCircle(pos.x, pos.y, 3);
 	
 	ofPoint velNormal = vel;
 	velNormal.normalize();
@@ -343,7 +346,7 @@ void particle::draw(){
 	velPerp.x = -velNormal.y;
 	velPerp.y = velNormal.x;
 	
-	ofLine(pos.x, pos.y, pos.x + velNormal.x*10, pos.y + velNormal.y*10);
+//	ofLine(pos.x, pos.y, pos.x + velNormal.x*10, pos.y + velNormal.y*10);
     
     
     float dx = pos.x - prevPos.x;
@@ -368,12 +371,22 @@ void particle::draw(){
     ofSetCircleResolution(3);
     ofPushMatrix();
     ofTranslate(pos.x, pos.y);
-    ofRotateZ(angle * RAD_TO_DEG);
-    ofCircle(0, 0, size);
+    ofRotateZ((angle * RAD_TO_DEG)+30);
+     ofScale(size, size);
+    
+    
+//    ofCircle(0, 0, size);
+    ofBeginShape();
+    ofVertex(r1*0, r1*1);
+    ofVertex(r2*cos(60), r2*sin(60));
+    ofVertex(r3*cos(150), r3*sin(150));
+    ofEndShape();
+    
+    
+    
     ofPopMatrix();
     ofSetCircleResolution(60);
     ofDisableAlphaBlending();
-	   
 }
 
 

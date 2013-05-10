@@ -93,7 +93,6 @@ void testApp::update(){
     
     //fbo
     
-    
     rgbaFboFloat.begin();
     drawFboTest();
 	rgbaFboFloat.end();
@@ -311,8 +310,7 @@ void testApp::update(){
         
 	}
     
-    
-    // number == 1 +++++++++++++++++++++++++++++++++++++
+   // number == 1 +++++++++++++++++++++++++++++++++++++
     
     
     if(number==1) {
@@ -326,9 +324,9 @@ void testApp::update(){
             particles2[i]->cohesion.distance = 50;
             particles2[i]->alignment.strength =  0.7;
             particles2[i]->alignment.distance = 42;
-            particles2[i]->seperation.strength = 0.07;
+            particles2[i]->seperation.strength = 0.7;
             particles2[i]->seperation.distance = 38;
-            particles2[i]->damping = 0.098;            
+            particles2[i]->damping = 0.08;            
         }
         
         
@@ -337,7 +335,7 @@ void testApp::update(){
         }
         
         
-        for (int i = 0; i < particles.size(); i++){
+        for (int i = 0; i < particles2.size(); i++){
             for (int j = i-1; j >= 0; j--){
                 if ( fabs(particles2[j]->pos.x - particles2[i]->pos.x) >	50) break;
                 if (i != j){
@@ -345,14 +343,18 @@ void testApp::update(){
                 }
             }
         }
-    
-        
+
+//            for (int i = 0; i < particles2.size(); i++){
+//                particles2[i]->c.set(ofRandom(100,255),0,ofRandom(0,50),50);
+//        }
+//        
+//        
+//        
         for (int i = 0; i < particles2.size(); i++){
             particles2[i]->addFlockingForce();
             particles2[i]->addDampingForce();
             particles2[i]->update();
         }
-        
         
         // wrap torroidally.
         for (int i = 0; i < particles2.size(); i++){
@@ -364,38 +366,6 @@ void testApp::update(){
             particles2[i]->pos = pos;
         }
 
-        
-        
-        
-        
-          // font particles
-  	    
-        for (int i = 0; i < particles.size(); i++){
-            particles[i].resetForce();
-        }
-		
-        for (int i = 0; i < particles.size(); i++){
-            
-            particles[i].addAttractionForce(mouseX, mouseY, 1000, 0.5);
-            particles[i].alignment.strength = scaledVol*2000;
-           particles[i].c.set(colPink);
-            
-            
-            for (int j = 0; j < i; j++){
-                if (bRepel){
-                    particles[i].addRepulsionForce(particles[j], radius, strength);
-                } else {
-                    particles[i].addAttractionForce(particles[j], radius, strength);
-                }
-            }
-        }
-        
-        for (int i = 0; i < particles.size(); i++){
-            particles[i].addDampingForce();
-            particles[i].update();
-        }
-        
-        
     };
     
     
@@ -425,7 +395,7 @@ void testApp::update(){
         }
         
         
-        for (int i = 0; i < particles.size(); i++){
+        for (int i = 0; i < particles2.size(); i++){
             for (int j = i-1; j >= 0; j--){
                 if ( fabs(particles2[j]->pos.x - particles2[i]->pos.x) >	50) break;
                 if (i != j){
@@ -452,37 +422,6 @@ void testApp::update(){
             if (pos.y > ofGetHeight()) pos.y = 0;
             particles2[i]->pos = pos;
         }
-        
-        
-   
-        // font particles 
-        
-        for (int i = 0; i < particles.size(); i++){
-            particles[i].resetForce();
-        }
-        
-        
-        for (int i = 0; i < particles.size(); i++){
-            
-            particles[i].addAttractionForce(mouseX, mouseY, 1000, 0.5);
-           // particles[i].scl.x = 500;
-           // particles[i].scl.y = 500;
-            
-            for (int j = 0; j < i; j++){
-                if (bRepel){
-                    particles[i].addRepulsionForce(particles[j], radius + smoothedVol * 3000, strength);
-                } else {
-                    particles[i].addAttractionForce(particles[j], radius , strength);
-                }
-            }
-        }
-        
-        for (int i = 0; i < particles.size(); i++){
-            particles[i].addDampingForce();
-            particles[i].damping = 0.1;
-            particles[i].update();
-        }
-        
     }
     
     
@@ -510,7 +449,7 @@ void testApp::update(){
         }
         
         
-        for (int i = 0; i < particles.size(); i++){
+        for (int i = 0; i < particles2.size(); i++){
             for (int j = i-1; j >= 0; j--){
                 if ( fabs(particles2[j]->pos.x - particles2[i]->pos.x) >	50) break;
                 if (i != j){
@@ -540,52 +479,7 @@ void testApp::update(){
         
         
         
-        // font particles
-        
-
-        
-        
-             
-        for (int i = 0; i < particles.size(); i++){
-            particles[i].resetForce();
-        }
-        
-        for (int i = 0; i < particles.size(); i++){
-            
-            for (int j = 0; j < particles.size(); j++){
-                if (i != j){
-                    particles[i].addForFlocking(particles[j]);
-                }
-            }
-        
-        }
-        
-        
-        
-        for (int i = 0; i < particles.size(); i++){
-        
-          particles[i].damping = smoothedVol*200;
-        } 
-        
-        for (int i = 0; i < particles.size(); i++){
-            
-            particles[i].addFlockingForce();
-            particles[i].addDampingForce();
-            particles[i].update();
-        }
-        
-        
-        // wrap torroidally.
-        for (int i = 0; i < particles.size(); i++){
-            ofVec2f pos = particles[i].pos;
-            if (pos.x < 0) pos.x = ofGetWidth();
-            if (pos.x > ofGetWidth()) pos.x = 0;
-            if (pos.y < 0) pos.y = ofGetHeight();
-            if (pos.y > ofGetHeight()) pos.y = 0;
-            particles[i].pos = pos;
-        }
-        
-    }
+         }
     // number == 4  seperation.distance +++++++++++++++++++++++++++++++++++++
     
     if(number == 4) {
@@ -610,7 +504,7 @@ void testApp::update(){
         }
         
         
-        for (int i = 0; i < particles.size(); i++){
+        for (int i = 0; i < particles2.size(); i++){
             for (int j = i-1; j >= 0; j--){
                 if ( fabs(particles2[j]->pos.x - particles2[i]->pos.x) >	50) break;
                 if (i != j){
@@ -639,54 +533,7 @@ void testApp::update(){
         }
         
         
-        
-        // font particles
-        
-
-        
-        
-        for (int i = 0; i < particles.size(); i++){
-            particles[i].resetForce();
-        }
-        
-        
-        for (int i = 0; i < particles.size(); i++){
-            for (int j = 0; j < particles.size(); j++){
-                if (i != j){
-                    particles[i].addForFlocking(particles[j]);
-                }
-            }
-            
-            // this was something we tried in class (partitcle move away from mouse...)
-            particles[i].addRepulsionForce(mouseX, mouseY, 40, 0.4);
-        }
-        
-        for (int i = 0; i < particles.size(); i++){
-            particles[i].addFlockingForce();
-            particles[i].addDampingForce();
-            particles[i].update();
-        }
-        
-        
-        // wrap torroidally.
-        for (int i = 0; i < particles.size(); i++){
-            ofVec2f pos = particles[i].pos;
-            if (pos.x < 0) pos.x = ofGetWidth();
-            if (pos.x > ofGetWidth()) pos.x = 0;
-            if (pos.y < 0) pos.y = ofGetHeight();
-            if (pos.y > ofGetHeight()) pos.y = 0;
-            particles[i].pos = pos;
-        }
-        
-        for (int i = 0; i < particles.size(); i++){
-            particles[i].seperation.distance = smoothedVol*1000 ;
-            particles[i].seperation.strength = 23;
-            particles[i].damping = 0.13;
-            
-            particles[i].addAttractionForce(mouseX, mouseY, 1000, 0.5);
-            
-        }
-    }
+         }
     
     
     
@@ -698,11 +545,11 @@ void testApp::update(){
         sort( particles2.begin(), particles2.end(), comparisonFunction );
         
         for (int i = 0; i < particles2.size(); i++){
-            particles2[i]->cohesion.strength = 0.1;
-            particles2[i]->cohesion.distance = 50;
+            particles2[i]->cohesion.strength = 0.5;
+            particles2[i]->cohesion.distance = 100;
             particles2[i]->alignment.strength =  0.38;
             particles2[i]->alignment.distance = 52;
-            particles2[i]->seperation.strength = 0.4;
+            particles2[i]->seperation.strength = 0.9;
             particles2[i]->seperation.distance = 15;
             particles2[i]->damping = 0.68;
         }
@@ -713,7 +560,7 @@ void testApp::update(){
         }
         
         
-        for (int i = 0; i < particles.size(); i++){
+        for (int i = 0; i < particles2.size(); i++){
             for (int j = i-1; j >= 0; j--){
                 if ( fabs(particles2[j]->pos.x - particles2[i]->pos.x) >	50) break;
                 if (i != j){
@@ -742,55 +589,254 @@ void testApp::update(){
         }
         
         
-        
-        // font particles
-        
-
-        
-        for (int i = 0; i < particles.size(); i++){
-            particles[i].resetForce();
-        }
-        
-        for (int i = 0; i < particles.size(); i++){
-            for (int j = 0; j < particles.size(); j++){
-                if (i != j){
-                    particles[i].addForFlocking(particles[j]);
+      }
+    
+    
+// number == 6 repulsion = sound +++++++++++++++++++++++++++++++++++++
+    
+    
+        if(number == 6) {
+            // background particles
+            
+            sort( particles2.begin(), particles2.end(), comparisonFunction );
+            
+            for (int i = 0; i < particles2.size(); i++){
+                particles2[i]->cohesion.strength = 0.20;
+                particles2[i]->cohesion.distance = 10;
+                particles2[i]->alignment.strength =  0.31;
+                particles2[i]->alignment.distance = 200;
+                particles2[i]->seperation.strength = 0.4;
+                particles2[i]->seperation.distance = 2;
+                particles2[i]->damping = 0.20;
+            }
+            
+            
+            for (int i = 0; i < particles2.size(); i++){
+                particles2[i]->resetForce();
+            }
+            
+            
+            for (int i = 0; i < particles2.size(); i++){
+                for (int j = i-1; j >= 0; j--){
+                    if ( fabs(particles2[j]->pos.x - particles2[i]->pos.x) >50) break;
+                    if (i != j){
+                        particles2[i]->addForFlocking(*particles2[j]);
+                    }
                 }
             }
             
             
-            // this was something we tried in class (partitcle move away from mouse...)
-            particles[i].addRepulsionForce(mouseX, mouseY, 40, 0.4);
-        }
-        
-        for (int i = 0; i < particles.size(); i++){
+            
+            for (int i = 0; i < particles2.size(); i++){
+                particles2[i]->addFlockingForce();
+                particles2[i]->addDampingForce();
+                particles2[i]->update();
+            }
             
             
-            particles[i].addFlockingForce();
-            particles[i].cohesion.strength = smoothedVol*100;
-            particles[i].damping = 0.05;
-            particles[i].addDampingForce();
-            particles[i].update();
+            // wrap torroidally.
+            for (int i = 0; i < particles2.size(); i++){
+                ofVec2f pos = particles2[i]->pos;
+                if (pos.x < 0) pos.x = ofGetWidth();
+                if (pos.x > ofGetWidth()) pos.x = 0;
+                if (pos.y < 0) pos.y = ofGetHeight();
+                if (pos.y > ofGetHeight()) pos.y = 0;
+                particles2[i]->pos = pos;
+            }
+            
+            
+        }
+    
+    
+    
+    
+    // number == 7 repulsion = sound +++++++++++++++++++++++++++++++++++++
+    
+    if(number == 7) {
+        
+            // background particles
+            
+            sort( particles2.begin(), particles2.end(), comparisonFunction );
+            
+            for (int i = 0; i < particles2.size(); i++){
+                particles2[i]->cohesion.strength = 0.20;
+                particles2[i]->cohesion.distance = 100;
+                particles2[i]->alignment.strength =  0.31;
+                particles2[i]->alignment.distance = 20;
+                particles2[i]->seperation.strength = 0.4;
+                particles2[i]->seperation.distance = 2;
+                particles2[i]->damping = 0.8;
+            }
+            
+            
+            for (int i = 0; i < particles2.size(); i++){
+                particles2[i]->resetForce();
+            }
+            
+            
+            for (int i = 0; i < particles2.size(); i++){
+                for (int j = i-1; j >= 0; j--){
+                    if ( fabs(particles2[j]->pos.x - particles2[i]->pos.x) >50) break;
+                    if (i != j){
+                        particles2[i]->addForFlocking(*particles2[j]);
+                    }
+                }
+            }
+            
+            
+            
+            for (int i = 0; i < particles2.size(); i++){
+                particles2[i]->addFlockingForce();
+                particles2[i]->addDampingForce();
+                particles2[i]->update();
+            }
+            
+            
+            // wrap torroidally.
+            for (int i = 0; i < particles2.size(); i++){
+                ofVec2f pos = particles2[i]->pos;
+                if (pos.x < 0) pos.x = ofGetWidth();
+                if (pos.x > ofGetWidth()) pos.x = 0;
+                if (pos.y < 0) pos.y = ofGetHeight();
+                if (pos.y > ofGetHeight()) pos.y = 0;
+                particles2[i]->pos = pos;
+            }
+            
+            
         }
         
+    
+    
+       // number == 11 == draw +++++++++++++++++++++++++++++++++++++
+
+    // font particles
+    
+    if(number == 11) {
+
+    
+    for (int i = 0; i < particles.size(); i++){
+        particles[i].resetForce();
+    }
+    
+    for (int i = 0; i < particles.size(); i++){
         
-        // wrap torroidally.
-        for (int i = 0; i < particles.size(); i++){
-            ofVec2f pos = particles[i].pos;
-            if (pos.x < 0) pos.x = ofGetWidth();
-            if (pos.x > ofGetWidth()) pos.x = 0;
-            if (pos.y < 0) pos.y = ofGetHeight();
-            if (pos.y > ofGetHeight()) pos.y = 0;
-            particles[i].pos = pos;
+        particles[i].addAttractionForce(mouseX, mouseY, 1000, 0.5);
+        particles[i].alignment.strength = scaledVol*2000;
+        particles[i].c.set(colPink);
+        
+        
+        for (int j = 0; j < i; j++){
+            if (bRepel){
+                particles[i].addRepulsionForce(particles[j], radius, strength);
+            } else {
+                particles[i].addAttractionForce(particles[j], radius, strength);
+            }
+        }
+    }
+    
+    for (int i = 0; i < particles.size(); i++){
+        particles[i].addDampingForce();
+        particles[i].update();
+    }
+    
+
+}
+
+    
+// number == 12 == draw +++++++++++++++++++++++++++++++++++++
+    
+    // font particles
+    
+    if(number == 12) {
+
+    
+    // font particles
+    
+    for (int i = 0; i < particles.size(); i++){
+        particles[i].resetForce();
+    }
+    
+    
+    for (int i = 0; i < particles.size(); i++){
+        
+        particles[i].addAttractionForce(mouseX, mouseY, 1000, 0.5);
+        // particles[i].scl.x = 500;
+        // particles[i].scl.y = 500;
+        
+        for (int j = 0; j < i; j++){
+            if (bRepel){
+                particles[i].addRepulsionForce(particles[j], radius + smoothedVol * 3000, strength);
+            } else {
+                particles[i].addAttractionForce(particles[j], radius , strength);
+            }
+        }
+    }
+    
+    for (int i = 0; i < particles.size(); i++){
+        particles[i].addDampingForce();
+        particles[i].damping = 0.1;
+        particles[i].update();
+    }
+    }
+    
+    
+// number == 13 == draw +++++++++++++++++++++++++++++++++++++
+    
+    // font particles
+    
+    if(number == 13) {
+  
+    
+    // font particles 
+    
+    for (int i = 0; i < particles.size(); i++){
+        particles[i].resetForce();
+    }
+    
+    for (int i = 0; i < particles.size(); i++){
+        
+        for (int j = 0; j < particles.size(); j++){
+            if (i != j){
+                particles[i].addForFlocking(particles[j]);
+            }
         }
         
     }
     
     
-// number == 6 repulsion = sound +++++++++++++++++++++++++++++++++++++
     
-    if(number == 6) {
+    for (int i = 0; i < particles.size(); i++){
+        
+        particles[i].damping = smoothedVol*200;
+    }
     
+    for (int i = 0; i < particles.size(); i++){
+        
+        particles[i].addFlockingForce();
+        particles[i].addDampingForce();
+        particles[i].update();
+    }
+    
+    
+    // wrap torroidally.
+    for (int i = 0; i < particles.size(); i++){
+        ofVec2f pos = particles[i].pos;
+        if (pos.x < 0) pos.x = ofGetWidth();
+        if (pos.x > ofGetWidth()) pos.x = 0;
+        if (pos.y < 0) pos.y = ofGetHeight();
+        if (pos.y > ofGetHeight()) pos.y = 0;
+        particles[i].pos = pos;
+    }
+    
+
+}
+    
+   // number == 14 == draw +++++++++++++++++++++++++++++++++++++
+    
+    // font particles
+    
+    if(number == 14) {
+        
     for (int i = 0; i < particles.size(); i++){
         particles[i].resetForce();
     }
@@ -803,7 +849,8 @@ void testApp::update(){
             }
         }
         
-        particles[i].addRepulsionForce(mouseX, mouseY, smoothedVol*100, 0.4);
+        // this was something we tried in class (partitcle move away from mouse...)
+        particles[i].addRepulsionForce(mouseX, mouseY, 40, 0.4);
     }
     
     for (int i = 0; i < particles.size(); i++){
@@ -824,20 +871,65 @@ void testApp::update(){
     }
     
     for (int i = 0; i < particles.size(); i++){
-        particles[i].alignment.distance = smoothedVol ;
-        particles[i].alignment.strength = 60;
-        particles[i].damping = 0.15;
+        particles[i].seperation.distance = smoothedVol*1000 ;
+        particles[i].seperation.strength = 23;
+        particles[i].damping = 0.13;
         
-      //  particles[i].addAttractionForce(mouseX, mouseY, 1000, 0.5);
+        particles[i].addAttractionForce(mouseX, mouseY, 1000, 0.5);
         
     }
+}
     
+    
+    
+    // number == 15 == Launch +++++++++++++++++++++++++++++++++++++
+    
+    if(number == 15) {
+        
+   
+    for (int i = 0; i < particles.size(); i++){
+        particles[i].resetForce();
+    }
+    
+    for (int i = 0; i < particles.size(); i++){
+        for (int j = 0; j < particles.size(); j++){
+            if (i != j){
+                particles[i].addForFlocking(particles[j]);
+            }
+        }
+        
+        
+        // this was something we tried in class (partitcle move away from mouse...)
+        particles[i].addRepulsionForce(mouseX, mouseY, 40, 0.4);
+    }
+    
+    for (int i = 0; i < particles.size(); i++){
+        
+        
+        particles[i].addFlockingForce();
+        particles[i].cohesion.strength = smoothedVol*100;
+        particles[i].damping = 0.05;
+        particles[i].addDampingForce();
+        particles[i].update();
     }
     
     
-    // number == 7 == Launch +++++++++++++++++++++++++++++++++++++
+    // wrap torroidally.
+    for (int i = 0; i < particles.size(); i++){
+        ofVec2f pos = particles[i].pos;
+        if (pos.x < 0) pos.x = ofGetWidth();
+        if (pos.x > ofGetWidth()) pos.x = 0;
+        if (pos.y < 0) pos.y = ofGetHeight();
+        if (pos.y > ofGetHeight()) pos.y = 0;
+        particles[i].pos = pos;
+    }
     
-    if(number == 7) {
+}
+    
+    
+    // number == 17 == Launch +++++++++++++++++++++++++++++++++++++
+    
+    if(number == 17) {
         
         for (int i = 0; i < particles.size(); i++){
             particles[i].resetForce();
@@ -865,8 +957,9 @@ void testApp::update(){
     }
     
     
+
     
-    
+
     //tail testing
     timePoint temp;
     
@@ -936,6 +1029,19 @@ void testApp::drawFboTest(){
         
     }
     
+    if(number== 5) {
+        fadeAmnt = 10;
+        ofSetColor(10,255,10, fadeAmnt);
+        
+    }
+    
+    
+    if(number== 6) {
+        fadeAmnt = 20;
+        ofSetColor(10,00,25, fadeAmnt);
+        
+    }
+    
     //	ofRect(0,0,ofGetScreenWidth(),ofGetScreenHeight());
     
 	//2 - Draw graphics
@@ -971,30 +1077,52 @@ void testApp::draw(){
     
 	string reportString =
     
-    "\n volumeSmooth = " + ofToString(smoothedVol)
+    "\n background = " + ofToString(smoothedVol)
     
     +
-    "\n default = bell (size) "
+    "\n default = growing "
     +
-    "\n 1 = rythem (white) "
+    "\n 1 = flows "
     +
-    "\n 2 = orchastral (expend) "
+    "\n 2 = funky "
     +
-    "\n 3 = electrical (tint + damping + red) "
+    "\n 3 = happy "
     +
-    "\n 4 = funky (seperate) "
+    "\n 4 = colorful lines "
     +
-    "\n 5 = soul (drift) "
+    "\n 5 = groups "
     +
-    "\n 6 = blue (repulsion) "
+    "\n 6 = straight "
     +
-    "\n 7 = fill up screen "; 
+    "\n 7 = combine ";
+    
+    
+    string reportString2 =
+    
+    "\n front visual  " + ofToString(smoothedVol)
+    +
+    "\n default = drawing volum (size) "
+    +
+    "\n q = rythem (white) "
+    +
+    "\n w = orchastral (expend)"
+    +
+    "\n e = electrical (tint + damping + red) "
+    +
+    "\n r=  funky (seperate)  "
+    +
+    "\n t = soul (drift) "
+    +
+    "\n y = stop / erase "
+    +
+    "\n u =  fill up screen";
      
     
 	ofSetColor(40,40,0);
 	ofRect(10,10,320,150);
 	ofSetColor(255,255,255);
 	ofDrawBitmapString(reportString, 30, 30);
+    ofDrawBitmapString(reportString2, 1100, 30);
     ofDrawBitmapString(alphaInfo, ofPoint(10,430));
 
 
@@ -1068,15 +1196,45 @@ void testApp::keyPressed(int key){
     if( key == '6' ){
 		number=6;
         
-        
 	}
+    
     
     if( key == '7' ){
 		number=7;
         
 	}
 
-   
+
+    if( key == 'q' ){
+		number = 11 ;
+        
+	}
+    
+    if( key == 'w' ){
+		number= 12 ;
+	}
+    if( key == 'e' ){
+		number= 13;
+        
+	}
+    if( key == 'r' ){
+		number= 14;
+        
+	}
+    
+    if( key == 't' ){
+		number=15;
+        
+	}
+    if( key == 'y' ){
+		number=16;
+        
+	}
+    if( key == 'u' ){
+		number=17;
+        
+	}
+    
 
 }
 
@@ -1098,42 +1256,51 @@ void testApp::mouseDragged(int x, int y, int button){
 	myParticle.setInitialCondition(x,y,0,0);
 	particles.push_back(myParticle);
     
-    if (number == 1){
+
+    
+    if (number == 11){
         for (int i = 0; i < particles.size(); i++){
             particles[i].c.set(colPink);
         }
         
     }
     
-    if (number == 2){
+    if (number == 12){
         for (int i = 0; i < particles.size(); i++){
-            particles[i].c.set(0,255,ofRandom(100,255),90);
+            particles[i].c.set(0,ofRandom(100,255),ofRandom(100,255),90);
             
         }
     }
     
-    if (number == 3){
+    if (number == 13){
         for (int i = 0; i < particles.size(); i++){
             particles[i].c.set(smoothedVol*1000+200,ofRandom(150),ofRandom(150), smoothedVol*10000);
         }
     }
     
-    if (number == 4){
+    if (number == 14){
         for (int i = 0; i < particles.size(); i++){
             particles[i].c.set(ofRandom(100,255),255 ,255,90);
         }
         
     }
     
-    if (number == 5){
+    if (number == 15){
         for (int i = 0; i < particles.size(); i++){
             particles[i].c.set(255, ofRandom(100,255), 255,90);
         }
         
     }
-    if (number == 6){
+    if (number == 16){
         for (int i = 0; i < particles.size(); i++){
-            particles[i].c.set(255, ofRandom(100,255), 255,90);
+            particles[i].c.set(255, 0, ofRandom(100,255),90);
+        }
+        
+    }
+    
+    if (number == 17){
+        for (int i = 0; i < particles.size(); i++){
+            particles[i].c.set(ofRandom(0,100),ofRandom(0,100), 0,90);
         }
         
     }

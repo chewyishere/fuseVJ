@@ -42,8 +42,6 @@ class testApp : public ofBaseApp{
     int         width, height; // addon H/W
     
     vector <particle> particles; // particle
-    
-
     vector <particle *> particles2;      // pointer particles'
     
     //fbo
@@ -83,6 +81,7 @@ class testApp : public ofBaseApp{
     
 
     int number;
+    string letter;
 
     float volumeSmooth;
     
