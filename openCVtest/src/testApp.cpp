@@ -58,10 +58,10 @@ void testApp::setup(){
 	ofClear(255,255,255, 0);
     rgbaFbo.end();
     
-    rgbaFboFloat.begin();
-	ofClear(255,255,255, 0);
-    rgbaFboFloat.end();
-    
+//    rgbaFboFloat.begin();
+//	ofClear(255,255,255, 0);
+//    rgbaFboFloat.end();
+//    
     fadeAmnt=50;
     
     
@@ -321,7 +321,7 @@ void testApp::update(){
         
         
         for (int i = 0; i < particles.size(); i++){
-            particles[i]->addFlockingForce();
+          //  particles[i]->addFlockingForce();
             particles[i]->addDampingForce();
             particles[i]->update();
         }
@@ -425,17 +425,7 @@ void testApp::update(){
         }
         
         
-        // wrap torroidally.
-        for (int i = 0; i < particles.size(); i++){
-            ofVec2f pos = particles[i]->pos;
-            if (pos.x < 0) pos.x = ofGetWidth();
-            if (pos.x > ofGetWidth()) pos.x = 0;
-            if (pos.y < 0) pos.y = ofGetHeight();
-            if (pos.y > ofGetHeight()) pos.y = 0;
-            particles[i]->pos = pos;
-        }
-        
-    }
+}
         
          
     // number == 5  +++++++++++++++++++++++++++++++++++++
@@ -606,7 +596,7 @@ void testApp::drawFboTest(){
     ofSetColor(255,255,255, fadeAmnt);
     
     if(number== 1) {
-        fadeAmnt = 100;
+        fadeAmnt = 1;
         ofSetColor(255,255,255, fadeAmnt);
         
     }
@@ -647,10 +637,12 @@ void testApp::draw(){
 	//ofBackgroundGradient(dark, ofColor::black);
     
     ofSetColor(255,50);
-    
+  
     rgbaFbo.draw(0,0);
     rgbaFboFloat.draw(0,0);
-    
+  
+    string alphaInfo = "Current alpha fade amnt = " + ofToString(fadeAmnt);
+
     
   videoDiffMHI.draw(0, 0);
 //	videoGrayscaleCvImage.draw(20,20, 100,80);
@@ -663,6 +655,7 @@ void testApp::draw(){
 		particles[i]->draw();
 	}
 
+    ofDrawBitmapString(alphaInfo, ofPoint(10,430));
 
 }
 

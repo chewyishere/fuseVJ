@@ -96,5 +96,4 @@ class testApp : public ofBaseApp{
     string msg_strings[NUM_MSG_STRINGS];
     float timers[NUM_MSG_STRINGS];
     
-    ofBlendMode blendMode;
 };

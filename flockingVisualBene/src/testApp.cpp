@@ -9,7 +9,8 @@ bool comparisonFunction(  particle * a, particle * b ) {
 
 //--------------------------------------------------------------
 void testApp::setup(){
-
+    
+    
     receiver.setup(PORT);
 	
 	ofSetVerticalSync(true);
@@ -89,10 +90,6 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){
-    
-    
-    //blendMode = OF_BLENDMODE_SCREEN;
-
     
     //fbo
     
@@ -654,7 +651,7 @@ void testApp::update(){
     
     
     
-    // number == 7 repulsion  +++++++++++++++++++++++++++++++++++++
+    // number == 7 repulsion = sound +++++++++++++++++++++++++++++++++++++
     
     if(number == 7) {
         
@@ -710,107 +707,18 @@ void testApp::update(){
         }
         
     
-    // number == 8  +++++++++++++++++++++++++++++++++++++
-    
-    if(number == 8) {
-        
-        // background particles
-        
-        sort( particles2.begin(), particles2.end(), comparisonFunction );
-        
-        for (int i = 0; i < particles2.size(); i++){
-            particles2[i]->cohesion.strength = 0.43;
-            particles2[i]->cohesion.distance = 13.3;
-            particles2[i]->alignment.strength =  0.2;
-            particles2[i]->alignment.distance = 16.7;
-            particles2[i]->seperation.strength = 0.73;
-            particles2[i]->seperation.distance = 105;
-            particles2[i]->damping = 0.3;
-        }
-        
-        
-        for (int i = 0; i < particles2.size(); i++){
-            particles2[i]->resetForce();
-        }
-        
-        
-        for (int i = 0; i < particles2.size(); i++){
-            for (int j = i-1; j >= 0; j--){
-                if ( fabs(particles2[j]->pos.x - particles2[i]->pos.x) >50) break;
-                if (i != j){
-                    particles2[i]->addForFlocking(*particles2[j]);
-                }
-            }
-        }
-        
-        
-        for (int i = 0; i < particles2.size(); i++){
-            particles2[i]->addFlockingForce();
-            particles2[i]->addDampingForce();
-            particles2[i]->update();
-        }
-        
-        
-    }
-
-    
-    // number == 9  +++++++++++++++++++++++++++++++++++++
-    
-    if(number == 9) {
-        
-        // background particles
-        
-        sort( particles2.begin(), particles2.end(), comparisonFunction );
-        
-        for (int i = 0; i < particles2.size(); i++){
-            particles2[i]->cohesion.strength = 1;
-            particles2[i]->cohesion.distance = 200;
-            particles2[i]->alignment.strength =  0.5;
-            particles2[i]->alignment.distance = 200;
-            particles2[i]->seperation.strength = 0.77;
-            particles2[i]->seperation.distance = 84.4;
-            particles2[i]->damping = 0.2;
-        }
-        
-        
-        for (int i = 0; i < particles2.size(); i++){
-            particles2[i]->resetForce();
-        }
-        
-        
-        for (int i = 0; i < particles2.size(); i++){
-            for (int j = i-1; j >= 0; j--){
-                if ( fabs(particles2[j]->pos.x - particles2[i]->pos.x) >50) break;
-                if (i != j){
-                    particles2[i]->addForFlocking(*particles2[j]);
-                }
-            }
-        }
-        
-        
-        for (int i = 0; i < particles2.size(); i++){
-            particles2[i]->addFlockingForce();
-            particles2[i]->addDampingForce();
-            particles2[i]->update();
-        }
-        
-        
-    }
-    
-
-    
     
        // number == 11 == draw +++++++++++++++++++++++++++++++++++++
 
     // font particles
     
-    
     if(number == 11) {
+
     
     for (int i = 0; i < particles.size(); i++){
         particles[i].resetForce();
     }
-      blendMode = OF_BLENDMODE_SCREEN;
+    
     for (int i = 0; i < particles.size(); i++){
         
         particles[i].addAttractionForce(mouseX, mouseY, 1000, 0.5);
@@ -1074,161 +982,150 @@ void testApp::update(){
 void testApp::drawFboTest(){
 	//we clear the fbo if c is pressed.
 	//this completely clears the buffer so you won't see any trails
-	if( ofGetKeyPressed('0') ){
+	if( ofGetKeyPressed('c') ){
 		ofClear(255,255,255, 0);
 	}
+	
+	//some different alpha values for fading the fbo
+	//the lower the number, the longer the trails will take to fade away.
+    //	fadeAmnt = 40;
+    //	if(ofGetKeyPressed('1')){
+    //		fadeAmnt = 1;
+    //	}else if(ofGetKeyPressed('2')){
+    //		fadeAmnt = 5;
+    //	}else if(ofGetKeyPressed('3')){
+    //		fadeAmnt = 15;
+    //	}
     
-    //1 - Fade Fbo
+	//1 - Fade Fbo
 	
 	//this is where we fade the fbo
 	//by drawing a rectangle the size of the fbo with a small alpha value, we can slowly fade the current contents of the fbo.
-  
-  ofFill();
-  
+	ofFill();
+    
    ofColor dark(10,fadeAmnt);
    ofColor black(0, fadeAmnt);
     
-
-    //ofBackground(255,0,20,40);
-   
-  //ofBackgroundGradient(dark, black);
-
+   ofBackgroundGradient(dark, black);
+    
      if(number== 1) {
          fadeAmnt = 100;
+         ofSetColor(255,255,255, fadeAmnt);
+         
      }
     
      if(number== 2) {
          fadeAmnt = 60;
+         ofSetColor(255,0,0, fadeAmnt);
       }
 
     if(number== 3) {
         fadeAmnt = 30;
+        ofSetColor(0,255,255, fadeAmnt);
     }
     
     if(number== 4) {
         fadeAmnt = 5;
+        ofSetColor(10,10,10, fadeAmnt);
         
     }
     
     if(number== 5) {
         fadeAmnt = 10;
+        ofSetColor(10,255,10, fadeAmnt);
         
     }
     
     
     if(number== 6) {
         fadeAmnt = 20;
+        ofSetColor(10,00,25, fadeAmnt);
         
     }
     
-    if(number== 7) {
-        fadeAmnt = 0;
-        
-    }
-    
-    if(number== 8) {
-        fadeAmnt = 20;
-        
-    }
-    
-    if(number== 9) {
-        fadeAmnt = 20;
-        
-    }
-    
-    if(number== 10) {
-        fadeAmnt = 5;
-        
-    }
-    
-    if(number== 12) {
-        fadeAmnt = 100;
-        
-    }
-    
-    
-      
     //	ofRect(0,0,ofGetScreenWidth(),ofGetScreenHeight());
     
 	//2 - Draw graphics
-
+	
 	for (int i = 0; i < particles2.size(); i++){
 		particles2[i]->draw();
 	}
     
-    
-    for (int i = 0; i < particles.size(); i++){
-
-		particles[i].draw();
-	   
-    }
-
- 
 }
 
 
 //--------------------------------------------------------------
 void testApp::draw(){ 
     
+    
+  //  ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+  //ofBackgroundGradient(ofColor(252,239,233,255), ofColor(58,30,0,255));
+    
     ofSetColor(255, 50);
-    rgbaFbo.draw(0,0);
-    rgbaFboFloat.draw(0,0);
+     
+    //ofEnableAlphaBlending();
     
-    ofDrawBitmapString(ofToString(fadeAmnt),0,100);    
-    ofEnableBlendMode(blendMode);
-
-
-//    string alphaInfo = "Current alpha fade amnt = " + ofToString(fadeAmnt);
-//    
-//	string reportString =
-//    
-//    "\n background = " + ofToString(smoothedVol)
-//    
-//    +
-//    "\n default = growing "
-//    +
-//    "\n 1 = flows "
-//    +
-//    "\n 2 = funky "
-//    +
-//    "\n 3 = happy "
-//    +
-//    "\n 4 = colorful lines "
-//    +
-//    "\n 5 = groups "
-//    +
-//    "\n 6 = straight "
-//    +
-//    "\n 7 = combine ";
-//    
-//    
-//    string reportString2 =
-//    
-//    "\n front visual  " + ofToString(smoothedVol)
-//    +
-//    "\n default = drawing volum (size) "
-//    +
-//    "\n q = rythem (white) "
-//    +
-//    "\n w = orchastral (expend)"
-//    +
-//    "\n e = electrical (tint + damping + red) "
-//    +
-//    "\n r=  funky (seperate)  "
-//    +
-//    "\n t = soul (drift) "
-//    +
-//    "\n y = stop / erase "
-//    +
-//    "\n u =  fill up screen";
+        rgbaFbo.draw(0,0);
+        rgbaFboFloat.draw(0,0);
     
-    
-//	ofSetColor(40,40,0);
-//	ofRect(10,10,320,150);
-//	ofSetColor(255,255,255);
-//	ofDrawBitmapString(reportString, 30, 30);
-//  ofDrawBitmapString(reportString2, 1100, 30);
    
+      for (int i = 0; i < particles.size(); i++){
+		particles[i].draw();
+	}
+    
+    
+    string alphaInfo = "Current alpha fade amnt = " + ofToString(fadeAmnt);
+    
+	string reportString =
+    
+    "\n background = " + ofToString(smoothedVol)
+    
+    +
+    "\n default = growing "
+    +
+    "\n 1 = flows "
+    +
+    "\n 2 = funky "
+    +
+    "\n 3 = happy "
+    +
+    "\n 4 = colorful lines "
+    +
+    "\n 5 = groups "
+    +
+    "\n 6 = straight "
+    +
+    "\n 7 = combine ";
+    
+    
+    string reportString2 =
+    
+    "\n front visual  " + ofToString(smoothedVol)
+    +
+    "\n default = drawing volum (size) "
+    +
+    "\n q = rythem (white) "
+    +
+    "\n w = orchastral (expend)"
+    +
+    "\n e = electrical (tint + damping + red) "
+    +
+    "\n r=  funky (seperate)  "
+    +
+    "\n t = soul (drift) "
+    +
+    "\n y = stop / erase "
+    +
+    "\n u =  fill up screen";
+     
+    
+	ofSetColor(40,40,0);
+	ofRect(10,10,320,150);
+	ofSetColor(255,255,255);
+	ofDrawBitmapString(reportString, 30, 30);
+    ofDrawBitmapString(reportString2, 1100, 30);
+    ofDrawBitmapString(alphaInfo, ofPoint(10,430));
+
 
 }
 
@@ -1308,25 +1205,7 @@ void testApp::keyPressed(int key){
         
 	}
 
-    if( key == '8' ){
-        
-		number=8;
-  	}
-    
-    
-    if( key == '9' ){
-		number=9;
-        
-	}
-    
-    
-    if( key == '0' ){
-		number=0;
-        
-	}
 
- //-------------------- Front ---------------
-    
     if( key == 'q' ){
 		number = 11 ;
         
@@ -1356,41 +1235,7 @@ void testApp::keyPressed(int key){
 		number=17;
         
 	}
-   
     
-  //-------------------- BlendMode ---------------
-    if( key == 'z' ){
-        number= 20;
-        ofBackground(255,255,0,100); 
-        blendMode = OF_BLENDMODE_DISABLED;
-	}
-    if( key == 'x' ){
-        number= 21;
-      
-		blendMode = OF_BLENDMODE_ADD;
-        
-	}
-    if( key == 'c' ){
-        number= 22;
-        blendMode = OF_BLENDMODE_SCREEN;
-
-	}
-    if( key == 'v' ){
-        number= 23;
-		blendMode = OF_BLENDMODE_SUBTRACT;
-        
-	}
-    if( key == 'b' ){
-        number= 24;
-		blendMode = OF_BLENDMODE_ALPHA;
-        
-	}
-    if( key == 'n' ){
-        number= 25;
-        
-		blendMode = OF_BLENDMODE_MULTIPLY;
-        
-	}
 
 }
 
