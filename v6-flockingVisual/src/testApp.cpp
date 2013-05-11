@@ -18,7 +18,6 @@ void testApp::setup(){
     ofEnableAlphaBlending();
     
     //color setting
-    col1 = (ofRandom(255),ofRandom(255),ofRandom(100));
     colPink = (255,ofRandom(100,250),255);
     
     // FBO
@@ -47,7 +46,8 @@ void testApp::setup(){
  // THE INDIVIDUALS ----------------------------   
     
     for (int i = 0; i < 50; i++){
-		myParticle.setInitialCondition(ofRandom(0,ofGetWidth()),ofRandom(0,ofGetHeight()),0,0);
+		particle myParticle;
+        myParticle.setInitialCondition(ofRandom(0,ofGetWidth()),ofRandom(0,ofGetHeight()),0,0);
         particles.push_back(myParticle);
 		
 	}
@@ -58,8 +58,6 @@ void testApp::setup(){
     
     
 	CGDisplayHideCursor(kCGDirectMainDisplay);
-    ofToggleFullscreen();
-	ofSetVerticalSync(true);
 	ofSetCircleResolution(80);
 	ofBackground(0, 0, 0);
     
@@ -82,7 +80,6 @@ void testApp::setup(){
     
 	soundStream.setup(this, 0, 2, 44100, bufferSize, 4);
     
-    volumeSmooth  = 0.0;
 
 
 
@@ -90,9 +87,9 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){
-    
+    ofSetWindowTitle(ofToString(ofGetFrameRate()));
+
     //fbo
-    
     rgbaFboFloat.begin();
     drawFboTest();
 	rgbaFboFloat.end();
@@ -106,7 +103,6 @@ void testApp::update(){
 
     
     
-    float fade = abs(sin( ofGetElapsedTimef()*0.099 ));
     
     for (int i = 0; i < particles2.size(); i++){
 		for (int j = i-1; j >= 0; j--){
@@ -152,28 +148,42 @@ void testApp::update(){
 		receiver.getNextMessage(&m);
         for (int i = 0; i < particles.size(); i++){
             // check for mouse moved message
+
+//            get IP
+//            m.getRemoteIp();
+//            cout << m.getRemoteIp() << endl;
+            
             if(m.getAddress() == "/accel/x"){
                 particles2[i]->r3 = m.getArgAsFloat(0);
-                particles2[i]->vel.x += m.getArgAsFloat(0);
-                cout << m.getArgAsFloat(0) << endl;
+                particles2[i]->vel.x += m.getArgAsFloat(0)*10;
+            
             }
             
             if(m.getAddress() == "/accel/y"){
                 particles2[i]->r2 = m.getArgAsFloat(0);
-                particles2[i]->vel.y += m.getArgAsFloat(0);
+                particles2[i]->vel.y += m.getArgAsFloat(0)*10;
             }
             
             if(m.getAddress() == "/accel/z"){
                 particles2[i]->r1 = m.getArgAsFloat(0);
-                particles2[i]->vel.z += m.getArgAsFloat(0);
+                particles2[i]->vel.z += m.getArgAsFloat(0)*10;
+            }
+            
+            if(m.getAddress() == "/touch/state"){
+                if (m.getArgAsInt32(0) == 1) {
+                    bTouchDown = true;
+                }
+                if (m.getArgAsInt32(0) == 0) {
+                    bTouchDown = false;
+                }
             }
             
             
-            if(m.getAddress() == "/hue"){
+            if(m.getAddress() == "/touch/position/x"){
                 particles2[i]->c.setHue(m.getArgAsFloat(0));
             }
             
-            if(m.getAddress() == "/sat"){
+            if(m.getAddress() == "/touch/position/y"){
                 particles2[i]->c.setSaturation(m.getArgAsFloat(0));
             }
             
@@ -212,104 +222,7 @@ void testApp::update(){
         }
         
 	}
-    
-    ofPushView();
-    ofPushStyle();
-    
-    ofPushMatrix();
-    
-    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-    ofClear(0, 255);
-    ofSetColor( ofMap( fade , 0.0f, 0.5f, 0.0f, 1.0f, true) * 255,255);
-    font.drawString(message,
-                    width*0.5f - font.getStringBoundingBox(message,0,0).width*0.5f,
-                    height*0.5f);
-    
-    ofDisableBlendMode();
-    ofPopMatrix();
-    
-    ofPopView();
-    ofPopStyle();
-    
-    ofSetWindowTitle(ofToString(ofGetFrameRate()));
-    
-    //osc
-    
-    // hide old messages
-	for(int i = 0; i < NUM_MSG_STRINGS; i++){
-		if(timers[i] < ofGetElapsedTimef()){
-			msg_strings[i] = "";
-		}
-	}
-    
-	// check for waiting messages
-	while(receiver.hasWaitingMessages()){
-		// get the next message
-		ofxOscMessage m;
-		receiver.getNextMessage(&m);
-        for (int i = 0; i < particles.size(); i++){
-            // check for mouse moved message
-            if(m.getAddress() == "/accel/x"){
-                particles[i].r3 = m.getArgAsFloat(0);
-                particles[i].vel.x += m.getArgAsFloat(0);
-                cout << m.getArgAsFloat(0) << endl;
-            }
-            
-            if(m.getAddress() == "/accel/y"){
-                particles[i].r2 = m.getArgAsFloat(0);
-                particles[i].vel.y += m.getArgAsFloat(0);
-            }
-            
-            if(m.getAddress() == "/accel/z"){
-                particles[i].r1 = m.getArgAsFloat(0);
-                particles[i].vel.z += m.getArgAsFloat(0);
-            }
-            
-            
-            if(m.getAddress() == "/hue"){
-                particles[i].c.setHue(m.getArgAsFloat(0));
-            }
-            
-            if(m.getAddress() == "/sat"){
-                particles[i].c.setSaturation(m.getArgAsFloat(0));
-            }
-            
-            
-            else{
-                // unrecognized message: display on the bottom of the screen
-                string msg_string;
-                msg_string = m.getAddress();
-                msg_string += ": ";
-                for(int i = 0; i < m.getNumArgs(); i++){
-                    // get he argument type
-                    msg_string += m.getArgTypeName(i);
-                    msg_string += ":";
-                    // display the argument - make sure we get the right type
-                    if(m.getArgType(i) == OFXOSC_TYPE_INT32){
-                        msg_string += ofToString(m.getArgAsInt32(i));
-                    }
-                    else if(m.getArgType(i) == OFXOSC_TYPE_FLOAT){
-                        msg_string += ofToString(m.getArgAsFloat(i));
-                    }
-                    else if(m.getArgType(i) == OFXOSC_TYPE_STRING){
-                        msg_string += m.getArgAsString(i);
-                    }
-                    else{
-                        msg_string += "unknown";
-                    }
-                }
-                // add to the list of strings to display
-                msg_strings[current_msg_string] = msg_string;
-                timers[current_msg_string] = ofGetElapsedTimef() + 5.0f;
-                current_msg_string = (current_msg_string + 1) % NUM_MSG_STRINGS;
-                // clear the next line
-                msg_strings[current_msg_string] = "";
-            }
-            
-        }
         
-	}
-    
    // number == 1 +++++++++++++++++++++++++++++++++++++
     
     
@@ -874,9 +787,7 @@ void testApp::update(){
         particles[i].seperation.distance = smoothedVol*1000 ;
         particles[i].seperation.strength = 23;
         particles[i].damping = 0.13;
-        
         particles[i].addAttractionForce(mouseX, mouseY, 1000, 0.5);
-        
     }
 }
     
@@ -979,44 +890,27 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::drawFboTest(){
-	//we clear the fbo if c is pressed.
-	//this completely clears the buffer so you won't see any trails
-	if( ofGetKeyPressed('c') ){
+	
+    if( ofGetKeyPressed('c') ){
 		ofClear(255,255,255, 0);
 	}
 	
-	//some different alpha values for fading the fbo
-	//the lower the number, the longer the trails will take to fade away.
-    //	fadeAmnt = 40;
-    //	if(ofGetKeyPressed('1')){
-    //		fadeAmnt = 1;
-    //	}else if(ofGetKeyPressed('2')){
-    //		fadeAmnt = 5;
-    //	}else if(ofGetKeyPressed('3')){
-    //		fadeAmnt = 15;
-    //	}
-    
-	//1 - Fade Fbo
-	
-	//this is where we fade the fbo
-	//by drawing a rectangle the size of the fbo with a small alpha value, we can slowly fade the current contents of the fbo.
 	ofFill();
     
-   ofColor dark(10,fadeAmnt);
-   ofColor black(0, fadeAmnt);
+    ofColor dark(10,fadeAmnt);
+    ofColor black(0, fadeAmnt);
     
-   ofBackgroundGradient(dark, black);
+    ofBackgroundGradient(dark, black);
     
-     if(number== 1) {
+    if(number== 1) {
          fadeAmnt = 100;
          ofSetColor(255,255,255, fadeAmnt);
-         
-     }
+    }
     
-     if(number== 2) {
+    if(number== 2) {
          fadeAmnt = 60;
          ofSetColor(255,0,0, fadeAmnt);
-      }
+    }
 
     if(number== 3) {
         fadeAmnt = 30;
@@ -1026,106 +920,69 @@ void testApp::drawFboTest(){
     if(number== 4) {
         fadeAmnt = 5;
         ofSetColor(10,10,10, fadeAmnt);
-        
     }
     
     if(number== 5) {
         fadeAmnt = 10;
         ofSetColor(10,255,10, fadeAmnt);
-        
     }
     
     
     if(number== 6) {
         fadeAmnt = 20;
         ofSetColor(10,00,25, fadeAmnt);
-        
     }
     
-    //	ofRect(0,0,ofGetScreenWidth(),ofGetScreenHeight());
-    
-	//2 - Draw graphics
 	
 	for (int i = 0; i < particles2.size(); i++){
 		particles2[i]->draw();
 	}
     
+    for (int i = 0; i < particles.size(); i++){
+		particles[i].draw();
+	}
 }
 
 
 //--------------------------------------------------------------
 void testApp::draw(){ 
     
-    
-  //  ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-  //ofBackgroundGradient(ofColor(252,239,233,255), ofColor(58,30,0,255));
-    
-    ofSetColor(255, 50);
-     
-    //ofEnableAlphaBlending();
-    
+    ofSetColor(255,50);
         rgbaFbo.draw(0,0);
         rgbaFboFloat.draw(0,0);
-    
    
-      for (int i = 0; i < particles.size(); i++){
-		particles[i].draw();
-	}
-    
-    
-    string alphaInfo = "Current alpha fade amnt = " + ofToString(fadeAmnt);
-    
-	string reportString =
-    
-    "\n background = " + ofToString(smoothedVol)
-    
-    +
-    "\n default = growing "
-    +
-    "\n 1 = flows "
-    +
-    "\n 2 = funky "
-    +
-    "\n 3 = happy "
-    +
-    "\n 4 = colorful lines "
-    +
-    "\n 5 = groups "
-    +
-    "\n 6 = straight "
-    +
-    "\n 7 = combine ";
-    
-    
-    string reportString2 =
-    
-    "\n front visual  " + ofToString(smoothedVol)
-    +
-    "\n default = drawing volum (size) "
-    +
-    "\n q = rythem (white) "
-    +
-    "\n w = orchastral (expend)"
-    +
-    "\n e = electrical (tint + damping + red) "
-    +
-    "\n r=  funky (seperate)  "
-    +
-    "\n t = soul (drift) "
-    +
-    "\n y = stop / erase "
-    +
-    "\n u =  fill up screen";
-     
-    
-	ofSetColor(40,40,0);
-	ofRect(10,10,320,150);
-	ofSetColor(255,255,255);
-	ofDrawBitmapString(reportString, 30, 30);
-    ofDrawBitmapString(reportString2, 1100, 30);
-    ofDrawBitmapString(alphaInfo, ofPoint(10,430));
-
-
+//    
+//    string alphaInfo = "Current alpha fade amnt = " + ofToString(fadeAmnt);
+//    
+//	string reportString =
+//    "\n background = " + ofToString(smoothedVol)
+//    + "\n default = growing "
+//    + "\n 1 = flows "
+//    + "\n 2 = funky "
+//    + "\n 3 = happy "
+//    + "\n 4 = colorful lines "
+//    + "\n 5 = groups "
+//    + "\n 6 = straight "
+//    + "\n 7 = combine ";
+//    
+//    
+//    string reportString2 =
+//    "\n front visual  " + ofToString(smoothedVol)
+//    + "\n default = drawing volum (size) "
+//    + "\n q = rythem (white) "
+//    + "\n w = orchastral (expend)"
+//    + "\n e = electrical (tint + damping + red) "
+//    + "\n r=  funky (seperate)  "
+//    + "\n t = soul (drift) "
+//    + "\n y = stop / erase "
+//    + "\n u =  fill up screen";
+//    
+//	ofSetColor(40,40,0);
+//	ofRect(10,10,320,150);
+//	ofSetColor(255,255,255);
+//	ofDrawBitmapString(reportString, 30, 30);
+//    ofDrawBitmapString(reportString2, 1100, 30);
+    ofDrawBitmapString(ofToString(fadeAmnt), 10,430);
 }
 
 
@@ -1135,11 +992,8 @@ void testApp::draw(){
 void testApp::audioIn(float * input, int bufferSize, int nChannels){
 	
 	float curVol = 0.0;
-	
-	// samples are "interleaved"
-	int numCounted = 0;
+    int numCounted = 0;
     
-	//lets go through each sample and calculate the root mean square which is a rough way to calculate volume
 	for (int i = 0; i < bufferSize; i++){
 		left[i]		= input[i*2]*0.5;
 		right[i]	= input[i*2+1]*0.5;
@@ -1148,11 +1002,8 @@ void testApp::audioIn(float * input, int bufferSize, int nChannels){
 		curVol += right[i] * right[i];
 		numCounted+=2;
 	}
-	
-	//this is how we get the mean of rms :)
+	//rms volume
 	curVol /= (float)numCounted;
-	
-	// this is how we get the root of rms :)
 	curVol = sqrt( curVol );
 	
 	smoothedVol *= 0.93;
@@ -1164,89 +1015,27 @@ void testApp::audioIn(float * input, int bufferSize, int nChannels){
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-    
-    
-    if( key == '1' ){
-        number=1;
-        
-    }
-    
-    if( key == '2' ){
-        
-        number=2;
-        
-	}
-    
-    if( key == '3' ){
-        number=3;
-          
-    }
-    
-    if( key == '4' ){
-        number=4;
-		
-	}
-    
-    if( key == '5' ){
-        
-		number=5;
-  	}
-    
-    
-    if( key == '6' ){
-		number=6;
-        
-	}
-    
-    
-    if( key == '7' ){
-		number=7;
-        
-	}
-
-
-    if( key == 'q' ){
-		number = 11 ;
-        
-	}
-    
-    if( key == 'w' ){
-		number= 12 ;
-	}
-    if( key == 'e' ){
-		number= 13;
-        
-	}
-    if( key == 'r' ){
-		number= 14;
-        
-	}
-    
-    if( key == 't' ){
-		number=15;
-        
-	}
-    if( key == 'y' ){
-		number=16;
-        
-	}
-    if( key == 'u' ){
-		number=17;
-        
-	}
-    
-
+    if( key == '1' ) number=1;
+    if( key == '2' ) number=2;
+    if( key == '3' ) number=3;
+    if( key == '4' ) number=4;
+    if( key == '5' ) number=5;
+    if( key == '6' ) number=6;
+    if( key == '7' ) number=7;
+    if( key == 'q' || 'Q') number=11;
+    if( key == 'w' ) number=12;
+    if( key == 'e' ) number=13;
+    if( key == 'r' ) number=14;
+    if( key == 't' ) number=15;
+    if( key == 'y' ) number=16;
+    if( key == 'u' ) number=17;
+    if (key == 'f' ) ofToggleFullscreen();
 }
 
 //--------------------------------------------------------------
-void testApp::keyReleased(int key){
+void testApp::keyReleased(int key){}
 
-}
-
-//--------------------------------------------------------------
-void testApp::mouseMoved(int x, int y ){
-
-}
+void testApp::mouseMoved(int x, int y ){}
 
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
@@ -1262,13 +1051,11 @@ void testApp::mouseDragged(int x, int y, int button){
         for (int i = 0; i < particles.size(); i++){
             particles[i].c.set(colPink);
         }
-        
     }
     
     if (number == 12){
         for (int i = 0; i < particles.size(); i++){
             particles[i].c.set(0,ofRandom(100,255),ofRandom(100,255),90);
-            
         }
     }
     
@@ -1282,53 +1069,32 @@ void testApp::mouseDragged(int x, int y, int button){
         for (int i = 0; i < particles.size(); i++){
             particles[i].c.set(ofRandom(100,255),255 ,255,90);
         }
-        
     }
     
     if (number == 15){
         for (int i = 0; i < particles.size(); i++){
             particles[i].c.set(255, ofRandom(100,255), 255,90);
         }
-        
     }
+    
     if (number == 16){
         for (int i = 0; i < particles.size(); i++){
             particles[i].c.set(255, 0, ofRandom(100,255),90);
         }
-        
     }
     
     if (number == 17){
         for (int i = 0; i < particles.size(); i++){
             particles[i].c.set(ofRandom(0,100),ofRandom(0,100), 0,90);
         }
-        
     }
     
 
 }
 
 //--------------------------------------------------------------
-void testApp::mousePressed(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void testApp::mouseReleased(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void testApp::windowResized(int w, int h){
-
-}
-
-//--------------------------------------------------------------
-void testApp::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){ 
-
-}
+void testApp::mousePressed(int x, int y, int button){}
+void testApp::mouseReleased(int x, int y, int button){}
+void testApp::windowResized(int w, int h){}
+void testApp::gotMessage(ofMessage msg){}
+void testApp::dragEvent(ofDragInfo dragInfo){}

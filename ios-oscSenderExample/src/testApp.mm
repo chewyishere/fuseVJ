@@ -59,11 +59,11 @@ void testApp::update(){
     
     ofxOscMessage m;
     m.setAddress( "/accel/x" );
-    m.addFloatArg( ofxAccelerometer.getForce().x );
+    m.addFloatArg( ofxAccelerometer.getForce().x);
     m.setAddress( "/accel/y" );
-    m.addFloatArg( ofxAccelerometer.getForce().y );
+    m.addFloatArg( ofxAccelerometer.getForce().y);
     m.setAddress( "/accel/z" );
-    m.addFloatArg( ofxAccelerometer.getForce().z );
+    m.addFloatArg( ofxAccelerometer.getForce().z);
     
     
 
@@ -81,14 +81,6 @@ void testApp::draw(){
     background.setHsb(inX, inY, 255);
 	ofBackground(background);
     
-    ofxOscMessage m;
-    m.setAddress( "/hue" );
-    m.addFloatArg( inX );
-    m.setAddress( "/sat" );
-    m.addFloatArg( inY );
-    sender.sendMessage( m );
-    
-    
 	// display instructions
 	string buf;
 	buf = "sending osc messages to" + string( HOST ) + ofToString( PORT );
@@ -104,10 +96,13 @@ void testApp::exit(){
 //--------------------------------------------------------------
 void testApp::touchDown(ofTouchEventArgs & touch){
 	ofxOscMessage m;
-	m.setAddress( "/mouse/button" );
-	m.addStringArg( "down" );
+	m.setAddress( "/touch/state" );
+	m.addIntArg(1);
+	m.setAddress( "/touch/position/x" );
+	m.addIntArg( touch.x );
+    m.setAddress("/touch/position/y");
+	m.addIntArg( touch.y );
 	sender.sendMessage( m );
-    
     
     bNoise = true;
 }
@@ -115,8 +110,9 @@ void testApp::touchDown(ofTouchEventArgs & touch){
 //--------------------------------------------------------------
 void testApp::touchMoved(ofTouchEventArgs & touch){
 	ofxOscMessage m;
-	m.setAddress( "/mouse/position" );
+	m.setAddress( "/touch/position/x" );
 	m.addIntArg( touch.x );
+    m.setAddress("/touch/position/y");
 	m.addIntArg( touch.y );
 	sender.sendMessage( m );
     
@@ -134,8 +130,8 @@ void testApp::touchMoved(ofTouchEventArgs & touch){
 //--------------------------------------------------------------
 void testApp::touchUp(ofTouchEventArgs & touch){
 	ofxOscMessage m;
-	m.setAddress( "/mouse/button" );
-	m.addStringArg( "up" );
+	m.setAddress( "/touch/state" );
+	m.addIntArg(0);
 	sender.sendMessage( m );
     
     bNoise = false;
