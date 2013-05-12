@@ -28,8 +28,6 @@ class testApp : public ofxiPhoneApp {
 		void deviceOrientationChanged(int newOrientation);
 
 		ofxOscSender sender;
-    
-    
         
         void audioOut(float * output, int bufferSize, int nChannels);
         

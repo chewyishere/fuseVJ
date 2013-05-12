@@ -1,12 +1,10 @@
 #pragma once
-#define RECT_NUM 250
-#define PARTICLE_NUM 450
 
 #include "ofMain.h"
 #include "timePoint.h"
 #include "particle.h"
-
 #include "ofxOsc.h"
+
 #define PORT 12345
 #define NUM_MSG_STRINGS 20
 
@@ -19,7 +17,6 @@ class testApp : public ofBaseApp{
         void draw();
     
         void drawFboTest();
-
     
 		void keyPressed  (int key);
 		void keyReleased(int key);
@@ -30,10 +27,10 @@ class testApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+		
     
-    //initializing particles
-    vector <particle> particles;        // particle
-    vector <particle *> particles2;     // pointer particles'
+    vector <particle> dwgParti;            // particle
+    vector <particle *> bgParti;         // pointer particles'
     
     //fbo
     ofFbo rgbaFboFloat;
@@ -51,22 +48,19 @@ class testApp : public ofBaseApp{
     float smoothedVol;
     float scaledVol;
     
+    //time points
+    vector < timePoint > pts;
+    float startTime;
+    particle myParticle;
+    particle myParticle2;
     
-    //local forces
+    //local interactions
     bool	bRepel;
     float	radius;
     float	strength;
-	
-    //timePoints
-    vector < timePoint > pts;
-    float startTime;
-    
-    
-    //mode Selector
+
+    //modes
     int number;
-    
-    //set color
-    ofColor colPink;
 
     //osc
     ofxOscReceiver receiver;
@@ -74,7 +68,5 @@ class testApp : public ofBaseApp{
     string msg_strings[NUM_MSG_STRINGS];
     float timers[NUM_MSG_STRINGS];
     
-    
-    bool bTouchDown, bTouchUp;
-    
+    ofBlendMode blendMode;
 };
