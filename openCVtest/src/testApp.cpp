@@ -633,8 +633,6 @@ void testApp::drawFboTest(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	
-//    ofColor (255);
-	//ofBackgroundGradient(dark, ofColor::black);
     
     ofSetColor(255,50);
   

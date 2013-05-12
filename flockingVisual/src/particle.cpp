@@ -19,6 +19,8 @@ particle::particle(){
     size = 20;
 	scale = 5;
     r1=r2=r3=1;
+    
+    randomizer = ofRandom(50);
 }
 
 //------------------------------------------------------------

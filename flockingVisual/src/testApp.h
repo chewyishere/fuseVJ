@@ -1,6 +1,6 @@
 #pragma once
 #define RECT_NUM 250
-#define PARTICLE_NUM 450
+#define PARTICLE_NUM 200
 
 #include "ofMain.h"
 #include "timePoint.h"
@@ -33,7 +33,7 @@ class testApp : public ofBaseApp{
 		
     
     ofImage background;
-    ofTrueTypeFont  font;
+//    ofTrueTypeFont  font;
     string  message;
     
     ofVec2f oldM;
@@ -58,7 +58,9 @@ class testApp : public ofBaseApp{
     bool	bRepel;
     float	radius;
     float	strength;
-	
+    float   userRadius;
+    
+    float   accelX, accelY, accelZ;
 
     vector <float> left;
     vector <float> right;
@@ -97,4 +99,7 @@ class testApp : public ofBaseApp{
     float timers[NUM_MSG_STRINGS];
     
     ofBlendMode blendMode;
+    
+    float hue,sat;
+    
 };

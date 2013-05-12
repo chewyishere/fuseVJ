@@ -60,7 +60,7 @@ class particle{
 		flockingForce seperation;
 		flockingForce alignment;
 	
-	
+        
 		void setInitialCondition(float px, float py, float vx, float vy);
         void update();
         void draw();
@@ -71,10 +71,12 @@ class particle{
         float angle;
         float size;
         float r,g,b;
+    int randomizer;
     
+
     float scale;
     float r1, r2, r3;
-        ofColor c;
+    ofColor c;
 
     protected:
     private:

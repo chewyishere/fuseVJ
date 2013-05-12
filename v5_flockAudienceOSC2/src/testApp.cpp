@@ -82,15 +82,7 @@ void testApp::update(){
 	for (int i = 0; i < particles.size(); i++){
 		particles[i]->resetForce();
 	}
-	
-//	for (int i = 0; i < particles.size(); i++){
-//		for (int j = 0; j < particles.size(); j++){
-//			if (i != j){
-//				particles[i]->addForFlocking(*particles[j]);
-//			}
-//		}
-//		particles[i]->addRepulsionForce(mouseX, mouseY, 40, 0.4);
-//	}
+
 	
     for (int i = 0; i < particles.size(); i++){
 		for (int j = i-1; j >= 0; j--){
