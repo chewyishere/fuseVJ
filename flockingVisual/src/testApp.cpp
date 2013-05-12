@@ -157,13 +157,9 @@ void testApp::update(){
             // check for mouse moved message
             if(m.getAddress() == "/accel/x"){
             // rSmooth = m.getArgAsFloat(0)/2;
-              // particles2[i]->r3 = (m.getArgAsFloat(0)+rSmooth)/5 ;
-              // particles2[i]->vel.x += (m.getArgAsFloat(0)+rSmooth)/2;
-                accelX = m.getArgAsFloat(0);
-//                cout << m.getArgAsFloat(0) << endl;
+                  accelX = m.getArgAsFloat(0);
             }
-            
-            //african music 
+
             if(m.getAddress() == "/accel/y"){
                 rSmooth = m.getArgAsFloat(0)/2;
                 particles2[i]->r2 = (m.getArgAsFloat(0)+rSmooth)/5;
@@ -174,34 +170,6 @@ void testApp::update(){
                  particles2[i]->r1 = (m.getArgAsFloat(0)+rSmooth)/5;
                  accelZ = m.getArgAsFloat(0);
              }
-            
-//            
-//            if ( -1< accelZ <0){
-//                if (0<accelY<1) {
-//                    particles2[i]->vel.x += 1 ;
-//                    particles2[i]->vel.y += 1;
-//                }
-//            
-//                if (-1<accelY<0) {
-//                    particles2[i]->vel.x += 1;
-//                    particles2[i]->vel.y -=1;
-//                }
-//            }
-//            
-//            if ( 0<accelZ<1){
-//                if (0<accelY<1) {
-//                    particles2[i]->vel.x -= -1;
-//                    particles2[i]->vel.y += 1;
-//                }
-//                
-//                if (-1<accelY<0) {
-//                    particles2[i]->vel.x -= 1;
-//                    particles2[i]->vel.y -= 1;
-//                }
-//            
-//            }
-
-            
             
             if(m.getAddress() == "/hue"){
                 hue = m.getArgAsFloat(0) + particles2[i]->randomizer;
@@ -289,7 +257,7 @@ void testApp::update(){
         for (int i = 0; i < particles.size(); i++){
             // check for mouse moved message
             if(m.getAddress() == "/accel/x"){
-              //  particles[i].r3 = m.getArgAsFloat(0);
+                particles[i].r3 = m.getArgAsFloat(0);
                // particles[i].vel.x += m.getArgAsFloat(0);
             cout << m.getArgAsFloat(0) << endl;
             }
@@ -361,12 +329,12 @@ void testApp::update(){
         
         for (int i = 0; i < particles2.size(); i++){
             particles2[i]->cohesion.strength = 0.1;
-            particles2[i]->cohesion.distance = 50;
+            particles2[i]->cohesion.distance = 20;
             particles2[i]->alignment.strength =  0.7;
-            particles2[i]->alignment.distance = 42;
+            particles2[i]->alignment.distance = 80;
             particles2[i]->seperation.strength = 0.7;
-            particles2[i]->seperation.distance = 38;
-            particles2[i]->damping = 0.08;            
+            particles2[i]->seperation.distance = 28;
+            particles2[i]->damping = 0.09;
         }
         
         
@@ -384,7 +352,7 @@ void testApp::update(){
                 
                 }
             
-                particles2[i]->addRepulsionForce(mouseX, mouseY,200,1);
+                particles2[i]->addRepulsionForce(mouseX, mouseY,100,1);
 
             
             }
@@ -405,9 +373,6 @@ void testApp::update(){
     
     if(number==2)  {
         
-        
-        // background particles
-        
         sort( particles2.begin(), particles2.end(), comparisonFunction );
         
         for (int i = 0; i < particles2.size(); i++){
@@ -415,27 +380,20 @@ void testApp::update(){
             particles2[i]->cohesion.distance = 50;
             particles2[i]->alignment.strength =  0.5;
             particles2[i]->alignment.distance = 130;
-            particles2[i]->seperation.strength = 0.4;
+            particles2[i]->seperation.strength = 0.8;
             particles2[i]->seperation.distance = 157;
-            particles2[i]->damping = 0.192;
-        }
-        
-        
-        for (int i = 0; i < particles2.size(); i++){
-          //  particles2[i]->resetForce();
+            particles2[i]->damping = 0.292;
         }
         
         
         for (int i = 0; i < particles2.size(); i++){
             for (int j = i-1; j >= 0; j--){
-                if ( fabs(particles2[j]->pos.x - particles2[i]->pos.x) >	50) break;
+                if ( fabs(particles2[j]->pos.x - particles2[i]->pos.x) >200) break;
                 if (i != j){
-                 //   particles2[i]->addForFlocking(*particles2[j]);
+                    particles2[i]->addForFlocking(*particles2[j]);
                 }
             }
-            
-           // particles2[i]->addAttractionForce(mouseX, mouseY, particles2[i]->vel.x*100, 5);
-            //particles2[i]->addRepulsionForce(mouseX, mouseY, 100, 1);
+            particles2[i]->addAttractionForce(mouseX, mouseY, 200, 5);
         
         }
         
@@ -463,7 +421,6 @@ void testApp::update(){
     
     if(number==3)  {
         
-        // background particles
         
         sort( particles2.begin(), particles2.end(), comparisonFunction );
         
@@ -478,22 +435,16 @@ void testApp::update(){
         }
         
         
-        for (int i = 0; i < particles2.size(); i++){
-            particles2[i]->resetForce();
-        }
-        
         
         for (int i = 0; i < particles2.size(); i++){
             for (int j = i-1; j >= 0; j--){
-                if ( fabs(particles2[j]->pos.x - particles2[i]->pos.x) >	50) break;
+                if ( fabs(particles2[j]->pos.x - particles2[i]->pos.x) >50) break;
                 if (i != j){
                     particles2[i]->addForFlocking(*particles2[j]);
                 }
             }
-            
+       
         }
-        
-      
         
         for (int i = 0; i < particles2.size(); i++){
             particles2[i]->addFlockingForce();
@@ -546,7 +497,7 @@ void testApp::update(){
                     particles2[i]->addForFlocking(*particles2[j]);
                 }
            }
-        
+            
             particles2[i]->addRepulsionForce(mouseX, mouseY, 300, 1);
         
         
@@ -593,8 +544,8 @@ void testApp::update(){
                     particles2[i]->addForFlocking(*particles2[j]);
                 }
             }
-            
-             particles2[i]->addAttractionForce(mouseX, mouseY, 40, 5);
+         
+             particles2[i]->addAttractionForce(mouseX, mouseY, 100, 5);
         }
         
         
@@ -651,7 +602,8 @@ void testApp::update(){
                         particles2[i]->addForFlocking(*particles2[j]);
                     }
                 }
-                
+                particles2[i]->vel.x += mouseX/1000;
+                particles2[i]->vel.y += mouseY/1000;
                 particles2[i]->addRepulsionForce(mouseX, mouseY, 30, 3);
             }
             
@@ -676,18 +628,13 @@ void testApp::update(){
                 particles2[i]->cohesion.strength = 0.20;
                 particles2[i]->cohesion.distance = 100;
                 particles2[i]->alignment.strength =  0.31;
-                particles2[i]->alignment.distance = 20;
+                particles2[i]->alignment.distance = 100;
                 particles2[i]->seperation.strength = 0.4;
                 particles2[i]->seperation.distance = 2;
-                particles2[i]->damping = 0.8;
+                particles2[i]->damping = 0.2;
             }
             
-            
-            for (int i = 0; i < particles2.size(); i++){
-                particles2[i]->resetForce();
-            }
-            
-            
+                 
             for (int i = 0; i < particles2.size(); i++){
                 for (int j = i-1; j >= 0; j--){
                     if ( fabs(particles2[j]->pos.x - particles2[i]->pos.x) >50) break;
@@ -696,7 +643,7 @@ void testApp::update(){
                     }
                 }
                 
-                particles2[i]->addAttractionForce(mouseX, mouseY, 300, 1);
+                particles2[i]->addAttractionForce(mouseX, mouseY, 400, 1);
             }
             
                         
@@ -774,7 +721,7 @@ void testApp::update(){
         for (int i = 0; i < particles2.size(); i++){
             particles2[i]->cohesion.strength = 1;
             particles2[i]->cohesion.distance = 200;
-            particles2[i]->alignment.strength =  0.5;
+            particles2[i]->alignment.strength =  1;
             particles2[i]->alignment.distance = 200;
             particles2[i]->seperation.strength = 0.77;
             particles2[i]->seperation.distance = 84.4;
@@ -794,6 +741,7 @@ void testApp::update(){
                     particles2[i]->addForFlocking(*particles2[j]);
                 }
             }
+             particles2[i]->addAttractionForce(mouseX, mouseY, 100, 10);
         }
         
         
@@ -817,7 +765,6 @@ void testApp::update(){
     for (int i = 0; i < particles.size(); i++){
         particles[i].resetForce();
     }
-      blendMode = OF_BLENDMODE_SCREEN;
     for (int i = 0; i < particles.size(); i++){
         
         particles[i].addAttractionForce(mouseX, mouseY, 1000, 0.5);
@@ -881,7 +828,6 @@ void testApp::update(){
     if(number == 13) {
   
     
-    // font particles 
     
     for (int i = 0; i < particles.size(); i++){
         particles[i].resetForce();
@@ -898,10 +844,9 @@ void testApp::update(){
     }
     
     
-    
     for (int i = 0; i < particles.size(); i++){
         
-        particles[i].damping = smoothedVol*200;
+        particles[i].damping = smoothedVol*10;
     }
     
     for (int i = 0; i < particles.size(); i++){
@@ -927,7 +872,6 @@ void testApp::update(){
     
    // number == 14 == draw +++++++++++++++++++++++++++++++++++++
     
-    // font particles
     
     if(number == 14) {
         
@@ -942,9 +886,7 @@ void testApp::update(){
                 particles[i].addForFlocking(particles[j]);
             }
         }
-        
-        // this was something we tried in class (partitcle move away from mouse...)
-        particles[i].addRepulsionForce(mouseX, mouseY, 40, 0.4);
+               particles[i].addRepulsionForce(mouseX, mouseY, 40, 0.4);
     }
     
     for (int i = 0; i < particles.size(); i++){
@@ -969,8 +911,6 @@ void testApp::update(){
         particles[i].seperation.strength = 23;
         particles[i].damping = 0.13;
         
-        particles[i].addAttractionForce(mouseX, mouseY, userRadius+100, 0.5);
-        
     }
 }
     
@@ -993,7 +933,6 @@ void testApp::update(){
         }
         
         
-        // this was something we tried in class (partitcle move away from mouse...)
         particles[i].addRepulsionForce(mouseX, mouseY, 40, 0.4);
     }
     
@@ -1154,6 +1093,7 @@ void testApp::drawFboTest(){
     else if(number>10){
         for (int i = 0; i < particles.size(); i++){
             particles[i].draw();
+            particles[i].c.setHsb(hue,sat,200);
         }
     }
 
@@ -1432,8 +1372,7 @@ void testApp::mouseDragged(int x, int y, int button){
     
     if (number == 13){
         for (int i = 0; i < particles.size(); i++){
-           // particles[i].c.set(smoothedVol*1000+200,ofRandom(150),ofRandom(150), smoothedVol*10000);
-        }
+    }
     }
     
     if (number == 14){
@@ -1451,14 +1390,14 @@ void testApp::mouseDragged(int x, int y, int button){
     }
     if (number == 16){
         for (int i = 0; i < particles.size(); i++){
-            particles[i].c.set(255, 0, ofRandom(100,255),90);
+            //particles[i].c.set(255, 0, ofRandom(100,255),90);
         }
         
     }
     
     if (number == 17){
         for (int i = 0; i < particles.size(); i++){
-            particles[i].c.set(ofRandom(0,100),ofRandom(0,100), 0,90);
+           // particles[i].c.set(ofRandom(0,100),ofRandom(0,100), 0,90);
         }
         
     }
