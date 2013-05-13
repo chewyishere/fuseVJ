@@ -40,11 +40,23 @@ void testApp::setup(){
     }
     img.reloadTexture();
     
-    
+    for (int i = 0; i< 8 ; i++){
+        bFlockMode[i] = false;
+        bDrawMode[i] = false;
+    }
+    for (int i = 0; i< 4 ; i++) bBlendMode[i] = false;
+
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
+    //ofxUI shits
+
+    
+    
+    
+    
+    
 	//we do a heartbeat on iOS as the phone will shut down the network connection to save power
 	//this keeps the network alive as it thinks it is being used. 
 	if( ofGetFrameNum() % 120 == 0 ){
@@ -90,67 +102,51 @@ void testApp::draw(){
 	ofDrawBitmapString( buf
                        + "\nmove the mouse to send osc message [/mouse/position <x> <y>]",
                        10, 20 );
-}
-
-//--------------------------------------------------------------
-
-void testApp::touchDown(ofTouchEventArgs & touch){
-	ofxOscMessage m;
-	m.setAddress( "/touch/state" );
-	m.addIntArg(1);
-	m.setAddress( "/touch/position/x" );
-	m.addIntArg( touch.x );
-    m.setAddress("/touch/position/y");
-	m.addIntArg( touch.y );
-	sender.sendMessage( m );
     
+    ofDrawBitmapStringHighlight("bFlockMode\n [0] " + ofToString(bFlockMode[0]) +
+                       "\n [1] " + ofToString(bFlockMode[1]) +
+                       "\n [2] " + ofToString(bFlockMode[2]) +
+                       "\n [3] " + ofToString(bFlockMode[3]) +
+                       "\n [4] " + ofToString(bFlockMode[4]) +
+                       "\n [5] " + ofToString(bFlockMode[5]) +
+                       "\n [6] " + ofToString(bFlockMode[6]) +
+                       "\n [7] " + ofToString(bFlockMode[7])
+                       , 30,30);
 }
 
 //--------------------------------------------------------------
-void testApp::touchMoved(ofTouchEventArgs & touch){
-	ofxOscMessage m;
-	m.setAddress( "/touch/position/x" );
-	m.addIntArg( touch.x );
-    m.setAddress("/touch/position/y");
-	m.addIntArg( touch.y );
-	sender.sendMessage( m );
-    
-}
 
-//--------------------------------------------------------------
-void testApp::touchUp(ofTouchEventArgs & touch){
-	ofxOscMessage m;
-	m.setAddress( "/touch/state" );
-	m.addIntArg(0);
-	sender.sendMessage( m );
-}
+void testApp::touchDown(ofTouchEventArgs & touch){}
+void testApp::touchMoved(ofTouchEventArgs & touch){}
+void testApp::touchUp(ofTouchEventArgs & touch){}
 
 void testApp::touchDoubleTap(ofTouchEventArgs & touch){}
-void testApp::touchCancelled(ofTouchEventArgs & touch){
-//    bNoise = false;
-}
+void testApp::touchCancelled(ofTouchEventArgs & touch){}
 void testApp::lostFocus(){}
 void testApp::gotFocus(){}
 void testApp::gotMemoryWarning(){}
 void testApp::deviceOrientationChanged(int newOrientation){}
-void testApp::exit(){    
+void testApp::exit(){
+    delete gui;
 	delete gui1;
+    delete gui2;
+    delete gui3;
+    delete gui4;
 }
 void testApp::drawGrid(float x, float y)
 {
     float w = ofGetWidth();
     float h = ofGetHeight();
     
-    for(int i = 0; i < h; i+=y)
-    {
+    for(int i = 0; i < h; i+=y){
         ofLine(0,i,w,i);
     }
     
-    for(int j = 0; j < w; j+=x)
-    {
+    for(int j = 0; j < w; j+=x){
         ofLine(j,0,j,h);
     }
 }
+
 
 vector<int> testApp:: getToggleMatrixValues(string received_name , ofxUIEventArgs &e){
     
@@ -174,13 +170,11 @@ vector<int> testApp:: getToggleMatrixValues(string received_name , ofxUIEventArg
     vresult.push_back(col);
     vresult.push_back((int)val);
     
-    cout << vresult[0] << " " <<vresult[1] <<" " << vresult[2] << endl;
+//    cout << vresult[0] << " " <<vresult[1] <<" " << vresult[2] << endl;
     
     return vresult;
     
 }
-
-
 //--------------------------------------------------------------
 void testApp::guiEvent(ofxUIEventArgs &e){
     
@@ -189,23 +183,46 @@ void testApp::guiEvent(ofxUIEventArgs &e){
     int kind = e.widget->getKind();
     cout << "got event from: " << name << endl;
     
-    if(name == "FLOCK MODE"){
+    
+    if(ofIsStringInString(name, "FLOCKMODE")){
         vector<int> res =  getToggleMatrixValues(name, e);
         int row = res[0];
         int col = res[1];
-        bool val = (bool) res[2];
-        cout << name << " <<<<<< " << row << " " << col << " " << val << endl;
+//        bool val = (bool) res[2];
+//        cout << name << " <<<<<< " << row << " " << col << " " << val << endl;
+    
+        // trigger false to reset everytimes
+        // because of ToggleMatrix's setAllowMultiple(false);
+        for (int i = 0; i<8; i++) bFlockMode[i] = false;
+        // then whatever clicked is true! yess!
+        if      (row == 0 && col == 0) bFlockMode[0] = true;
+        else if (row == 1 && col == 0) bFlockMode[1] = true;
+        else if (row == 2 && col == 0) bFlockMode[2] = true;
+        else if (row == 3 && col == 0) bFlockMode[3] = true;
+        else if (row == 0 && col == 1) bFlockMode[4] = true;
+        else if (row == 1 && col == 1) bFlockMode[5] = true;
+        else if (row == 2 && col == 1) bFlockMode[6] = true;
+        else if (row == 3 && col == 1) bFlockMode[7] = true;
+        
     }
-	else if(name == "DRAW MODE"){
+    else if(ofIsStringInString(name, "DRAWMODE")){
         vector<int> res =  getToggleMatrixValues(name, e);
         int row = res[0];
         int col = res[1];
-        bool val = (bool) res[2];
-        cout << name << " <<<<<< " << row << " " << col << " " << val << endl;
+        
+        for (int i = 0; i<8; i++) bDrawMode[i] = false;
+        if      (row == 0 && col == 0) bDrawMode[0] = true;
+        else if (row == 1 && col == 0) bDrawMode[1] = true;
+        else if (row == 2 && col == 0) bDrawMode[2] = true;
+        else if (row == 3 && col == 0) bDrawMode[3] = true;
+        else if (row == 0 && col == 1) bDrawMode[4] = true;
+        else if (row == 1 && col == 1) bDrawMode[5] = true;
+        else if (row == 2 && col == 1) bDrawMode[6] = true;
+        else if (row == 3 && col == 1) bDrawMode[7] = true;
 	}
 	else if(name == "FADE"){
 		ofxUISlider *slider = (ofxUISlider *) e.widget;
-		cout << "FADE " << slider->getScaledValue() << endl;
+//		cout << "FADE " << slider->getScaledValue() << endl;
 		fadeBar = slider->getScaledValue();
 	}
     else if(name == "DRAW SCREEN"){
@@ -216,9 +233,25 @@ void testApp::guiEvent(ofxUIEventArgs &e){
         ofxUIButton *button = (ofxUIButton *) e.widget;
         bClearScreen = button ->getValue();
     }
-    
-    
-    
+    else if(name == "ALL COLOR"){
+        ofxUIButton * button = (ofxUIButton *) e.widget;
+        bAllColor = button ->getValue();
+    }
+    else if(name == "Saturation"){
+        ofxUISlider *slider = (ofxUISlider * ) e.widget;
+        satBar = slider->getScaledValue();
+    }
+    else if(ofIsStringInString(name, "BLENDMODE")){
+        vector<int> res =  getToggleMatrixValues(name, e);
+        int row = res[0];
+        int col = res[1];
+        
+        for (int i = 0; i<4; i++) bBlendMode[i] = false;
+        if      (row == 0 && col == 0) bBlendMode[0] = true;
+        else if (row == 1 && col == 0) bBlendMode[1] = true;
+        else if (row == 2 && col == 0) bBlendMode[2] = true;
+        else if (row == 3 && col == 0) bBlendMode[3] = true;
+    }
 }
 
 
@@ -229,11 +262,6 @@ void testApp::setGUI(){
     float xInit = 10;
     float length = 450-xInit;
     fadeBar = 150;
-    cFlockMode = 1;
-    
-    
-    
-    cDrawMode = 11;
     
 	hideGUI = false;
 	
@@ -243,16 +271,20 @@ void testApp::setGUI(){
     gui->addSpacer(length-xInit, 15);
 	
     gui->addWidgetDown(new ofxUILabel("Flock Mode", OFX_UI_FONT_MEDIUM));
-    gui->addWidgetDown(new ofxUIToggleMatrix (dim, dim, 2, 4, "FLOCK MODE"));
-    ofxUIToggleMatrix* mtx = (ofxUIToggleMatrix *) gui->getWidget("FLOCK MODE");
+    
+    
+    
+    gui->addWidgetDown(new ofxUIToggleMatrix (dim, dim, 2, 4, "FLOCKMODE"));
+    ofxUIToggleMatrix* mtx = (ofxUIToggleMatrix *) gui->getWidget("FLOCKMODE");
     mtx->setAllowMultiple(false);
-//    mtx->getToggles()[0].set
+    vFlockToggles = mtx->getToggles();
+    
     
     gui->addSpacer(length-xInit, 15);
     
     gui->addWidgetDown(new ofxUILabel("Draw Mode", OFX_UI_FONT_MEDIUM));
-    gui->addWidgetDown(new ofxUIToggleMatrix (dim, dim, 2, 4, "DRAW MODE"));
-    ofxUIToggleMatrix* mtx2 = (ofxUIToggleMatrix *) gui->getWidget("DRAW MODE");
+    gui->addWidgetDown(new ofxUIToggleMatrix (dim, dim, 2, 4, "DRAWMODE"));
+    ofxUIToggleMatrix* mtx2 = (ofxUIToggleMatrix *) gui->getWidget("DRAWMODE");
     mtx2->setAllowMultiple(false);
     
     gui->addSpacer(length-xInit, 15);
@@ -314,8 +346,8 @@ void testApp::setGUI4(){
     
     gui4 = new ofxUICanvas(500, 550, length+xInit, ofGetHeight());
     gui4->addWidgetDown(new ofxUILabel("Blend Mode", OFX_UI_FONT_MEDIUM));
-    gui4->addWidgetDown(new ofxUIToggleMatrix (dim, dim, 2, 4, "BLEND MODE"));
-    ofxUIToggleMatrix* mtx = (ofxUIToggleMatrix *) gui4->getWidget("BLEND MODE");
+    gui4->addWidgetDown(new ofxUIToggleMatrix (dim, dim, 2, 4, "BLENDMODE"));
+    ofxUIToggleMatrix* mtx = (ofxUIToggleMatrix *) gui4->getWidget("BLENDMODE");
     mtx->setAllowMultiple(false);
     
 	ofAddListener(gui4->newGUIEvent,this,&testApp::guiEvent);

@@ -29,8 +29,9 @@ public:
     void deviceOrientationChanged(int newOrientation);
 
     void drawGrid(float x, float y);
-    //grab toggleMatrix data
-    vector<int> getToggleMatrixValues(string received_name , ofxUIEventArgs &e);
+    
+    vector<ofxUIToggle *> vFlockToggles, vDrawToggles, vBlendToggles;
+    vector <int> getToggleMatrixValues(string received_name , ofxUIEventArgs &e);
     
     //ofxUI
     void setGUI();
@@ -59,7 +60,7 @@ public:
     
     //osc
     ofxOscSender sender;
-    int cFlockMode, cDrawMode, cBlendMode;
+    bool bFlockMode[8], bDrawMode[8], bBlendMode[4];
     bool bDrawScreen, bClearScreen, bAllColor;
     float fadeBar, satBar;
     int cpHue, cpSat, cpBri;
