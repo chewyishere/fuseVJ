@@ -3,9 +3,10 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 	ofSetOrientation(OF_ORIENTATION_90_LEFT);
-    
 	ofxAccelerometer.setup();
-    sender.setup( HOST, PORT );
+    
+    ip =  "169.254.92.237";
+    sender.setup( ip, PORT );
 	ofSetFrameRate(60);
     ofEnableSmoothing();
     
@@ -14,11 +15,13 @@ void testApp::setup(){
     setGUI2();
     setGUI3();
     setGUI4();
+//    setGUI5();
     gui->setDrawBack(false);
     gui1->setDrawBack(false);
     gui2->setDrawBack(false);
     gui3->setDrawBack(false);
     gui4->setDrawBack(false);
+//    gui5->setDrawBack(false);
     
     sketch.loadImage("sketch.png");
     //initialize color picker
@@ -45,38 +48,35 @@ void testApp::setup(){
         bDrawMode[i] = false;
     }
     for (int i = 0; i< 4 ; i++) bBlendMode[i] = false;
-
+    
+	iosKeyboard = new ofxiPhoneKeyboard(330,25,320,20);
+	iosKeyboard->setVisible(true);
+	iosKeyboard->setBgColor(255, 255, 255, 200);
+	iosKeyboard->setFontColor(0,0,0, 255);
+	iosKeyboard->setFontSize(14);
+    iosKeyboard->updateOrientation();
+    
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-    //ofxUI shits
+    
 
-    
-    
-    
-    
+    sender.setup( ip, PORT );
     
 	//we do a heartbeat on iOS as the phone will shut down the network connection to save power
 	//this keeps the network alive as it thinks it is being used. 
 	if( ofGetFrameNum() % 120 == 0 ){
 		ofxOscMessage m;
-		m.setAddress( "/misc/heartbeat" );
+		m.setAddress( "/osc/heartbeat" );
 		m.addIntArg( ofGetFrameNum() );
 		sender.sendMessage( m );
 	}
-    
-    ofxOscMessage m;
-    m.setAddress( "/accel/x" );
-    m.addFloatArg( ofxAccelerometer.getForce().x);
-    m.setAddress( "/accel/y" );
-    m.addFloatArg( ofxAccelerometer.getForce().y);
-    m.setAddress( "/accel/z" );
-    m.addFloatArg( ofxAccelerometer.getForce().z);
-    
+    if (!iosKeyboard->isKeyboardShowing()) {
+        ip = iosKeyboard->getText();
+    }
     
 
-    sender.sendMessage( m );
     
 }
 
@@ -96,27 +96,35 @@ void testApp::draw(){
     ofSetLineWidth(0.5);
     drawGrid(10, 10);
     
-	// display instructions
-	string buf;
-	buf = "sending osc messages to" + string( HOST ) + ofToString( PORT );
-	ofDrawBitmapString( buf
-                       + "\nmove the mouse to send osc message [/mouse/position <x> <y>]",
-                       10, 20 );
     
-    ofDrawBitmapStringHighlight("bFlockMode\n [0] " + ofToString(bFlockMode[0]) +
-                       "\n [1] " + ofToString(bFlockMode[1]) +
-                       "\n [2] " + ofToString(bFlockMode[2]) +
-                       "\n [3] " + ofToString(bFlockMode[3]) +
-                       "\n [4] " + ofToString(bFlockMode[4]) +
-                       "\n [5] " + ofToString(bFlockMode[5]) +
-                       "\n [6] " + ofToString(bFlockMode[6]) +
-                       "\n [7] " + ofToString(bFlockMode[7])
-                       , 30,30);
+    ofDrawBitmapStringHighlight("IP: " + ofToString(ip)
+                                + "    PORT: " +ofToString(PORT)
+                                , 40,40);
+//    ofDrawBitmapStringHighlight("bFlockMode\n [0] " + ofToString(bFlockMode[0]) +
+//                       "\n [1] " + ofToString(bFlockMode[1]) +
+//                       "\n [2] " + ofToString(bFlockMode[2]) +
+//                       "\n [3] " + ofToString(bFlockMode[3]) +
+//                       "\n [4] " + ofToString(bFlockMode[4]) +
+//                       "\n [5] " + ofToString(bFlockMode[5]) +
+//                       "\n [6] " + ofToString(bFlockMode[6]) +
+//                       "\n [7] " + ofToString(bFlockMode[7])
+//                       , 30,30);
 }
 
 //--------------------------------------------------------------
 
-void testApp::touchDown(ofTouchEventArgs & touch){}
+void testApp::touchDown(ofTouchEventArgs & touch){
+	if (touch.id == 1){
+		
+		if(!iosKeyboard->isKeyboardShowing()){
+			iosKeyboard->openKeyboard();
+			iosKeyboard->setVisible(true);
+		} else{
+			iosKeyboard->setVisible(false);
+		}
+		
+	}
+}
 void testApp::touchMoved(ofTouchEventArgs & touch){}
 void testApp::touchUp(ofTouchEventArgs & touch){}
 
@@ -132,6 +140,7 @@ void testApp::exit(){
     delete gui2;
     delete gui3;
     delete gui4;
+//    delete gui5;
 }
 void testApp::drawGrid(float x, float y)
 {
@@ -141,7 +150,6 @@ void testApp::drawGrid(float x, float y)
     for(int i = 0; i < h; i+=y){
         ofLine(0,i,w,i);
     }
-    
     for(int j = 0; j < w; j+=x){
         ofLine(j,0,j,h);
     }
@@ -180,7 +188,7 @@ void testApp::guiEvent(ofxUIEventArgs &e){
     
     
     string name = e.widget->getName();
-    int kind = e.widget->getKind();
+//    int kind = e.widget->getKind();
     cout << "got event from: " << name << endl;
     
     
@@ -190,19 +198,53 @@ void testApp::guiEvent(ofxUIEventArgs &e){
         int col = res[1];
 //        bool val = (bool) res[2];
 //        cout << name << " <<<<<< " << row << " " << col << " " << val << endl;
-    
+        
+        ofxOscMessage m;
         // trigger false to reset everytimes
         // because of ToggleMatrix's setAllowMultiple(false);
         for (int i = 0; i<8; i++) bFlockMode[i] = false;
         // then whatever clicked is true! yess!
-        if      (row == 0 && col == 0) bFlockMode[0] = true;
-        else if (row == 1 && col == 0) bFlockMode[1] = true;
-        else if (row == 2 && col == 0) bFlockMode[2] = true;
-        else if (row == 3 && col == 0) bFlockMode[3] = true;
-        else if (row == 0 && col == 1) bFlockMode[4] = true;
-        else if (row == 1 && col == 1) bFlockMode[5] = true;
-        else if (row == 2 && col == 1) bFlockMode[6] = true;
-        else if (row == 3 && col == 1) bFlockMode[7] = true;
+        if      (row == 0 && col == 0){
+            bFlockMode[0] = true;
+            m.setAddress( "/flockmode/1" );
+            m.addIntArg(0);
+        }
+        else if (row == 1 && col == 0){
+            bFlockMode[1] = true;
+            m.setAddress( "/flockmode/2" );
+            m.addIntArg(0);
+        }
+        else if (row == 2 && col == 0){
+            bFlockMode[2] = true;
+            m.setAddress( "/flockmode/3" );
+            m.addIntArg(0);
+        }
+        else if (row == 3 && col == 0){
+            bFlockMode[3] = true;
+            m.setAddress( "/flockmode/4" );
+            m.addIntArg(0);
+        }
+        else if (row == 0 && col == 1){
+            bFlockMode[4] = true;
+            m.setAddress( "/flockmode/5" );
+            m.addIntArg(0);
+        }
+        else if (row == 1 && col == 1){
+            bFlockMode[5] = true;
+            m.setAddress( "/flockmode/6" );
+            m.addIntArg(0);
+        }
+        else if (row == 2 && col == 1){
+            bFlockMode[6] = true;
+            m.setAddress( "/flockmode/7" );
+            m.addIntArg(0);
+        }
+        else if (row == 3 && col == 1){
+            bFlockMode[7] = true;
+            m.setAddress( "/flockmode/8" );
+            m.addIntArg(0);
+        }
+		sender.sendMessage( m );
         
     }
     else if(ofIsStringInString(name, "DRAWMODE")){
@@ -210,48 +252,150 @@ void testApp::guiEvent(ofxUIEventArgs &e){
         int row = res[0];
         int col = res[1];
         
+        ofxOscMessage m;
         for (int i = 0; i<8; i++) bDrawMode[i] = false;
-        if      (row == 0 && col == 0) bDrawMode[0] = true;
-        else if (row == 1 && col == 0) bDrawMode[1] = true;
-        else if (row == 2 && col == 0) bDrawMode[2] = true;
-        else if (row == 3 && col == 0) bDrawMode[3] = true;
-        else if (row == 0 && col == 1) bDrawMode[4] = true;
-        else if (row == 1 && col == 1) bDrawMode[5] = true;
-        else if (row == 2 && col == 1) bDrawMode[6] = true;
-        else if (row == 3 && col == 1) bDrawMode[7] = true;
+        if      (row == 0 && col == 0){
+            bDrawMode[0] = true;
+            m.setAddress( "/drawmode/1" );
+            m.addIntArg(0);
+        }
+        else if (row == 1 && col == 0){
+            bDrawMode[1] = true;
+            m.setAddress( "/drawmode/2" );
+            m.addIntArg(0);
+        }
+        else if (row == 2 && col == 0){
+            bDrawMode[2] = true;
+            m.setAddress( "/drawmode/3" );
+            m.addIntArg(0);
+        }
+        else if (row == 3 && col == 0){
+            bDrawMode[3] = true;
+            m.setAddress( "/drawmode/4" );
+            m.addIntArg(0);
+        }
+        else if (row == 0 && col == 1){
+            bDrawMode[4] = true;
+            m.setAddress( "/drawmode/5" );
+            m.addIntArg(0);
+        }
+        else if (row == 1 && col == 1){
+            bDrawMode[5] = true;
+            m.setAddress( "/drawmode/6" );
+            m.addIntArg(0);
+        }
+        else if (row == 2 && col == 1){
+            bDrawMode[6] = true;
+            m.setAddress( "/drawmode/7" );
+            m.addIntArg(0);
+        }
+        else if (row == 3 && col == 1){
+            bDrawMode[7] = true;
+            m.setAddress( "/drawmode/8" );
+            m.addIntArg(0);
+        }
+		sender.sendMessage( m );
 	}
 	else if(name == "FADE"){
 		ofxUISlider *slider = (ofxUISlider *) e.widget;
 //		cout << "FADE " << slider->getScaledValue() << endl;
 		fadeBar = slider->getScaledValue();
+        
+		ofxOscMessage m;
+		m.setAddress( "/fadebar/" );
+		m.addFloatArg(fadeBar);
+		sender.sendMessage( m );
 	}
     else if(name == "DRAW SCREEN"){
         ofxUIButton *button = (ofxUIButton *) e.widget;
         bDrawScreen = button->getValue();
+        
+		ofxOscMessage m;
+		m.setAddress( "/drawscreen/" );
+		m.addIntArg(bDrawScreen);
+		sender.sendMessage( m );
     }
     else if(name == "CLEAR SCREEN"){
         ofxUIButton *button = (ofxUIButton *) e.widget;
         bClearScreen = button ->getValue();
+        
+		ofxOscMessage m;
+		m.setAddress( "/clearscreen/" );
+		m.addIntArg(bClearScreen);
+		sender.sendMessage( m );
     }
     else if(name == "ALL COLOR"){
         ofxUIButton * button = (ofxUIButton *) e.widget;
         bAllColor = button ->getValue();
+        
+		ofxOscMessage m;
+		m.setAddress( "/allcolor/" );
+		m.addIntArg(bAllColor);
+		sender.sendMessage( m );
     }
     else if(name == "Saturation"){
         ofxUISlider *slider = (ofxUISlider * ) e.widget;
         satBar = slider->getScaledValue();
+        
+		ofxOscMessage m;
+		m.setAddress( "/saturation/" );
+		m.addFloatArg(satBar);
+		sender.sendMessage( m );
     }
     else if(ofIsStringInString(name, "BLENDMODE")){
         vector<int> res =  getToggleMatrixValues(name, e);
         int row = res[0];
         int col = res[1];
         
+        
+        ofxOscMessage m;
         for (int i = 0; i<4; i++) bBlendMode[i] = false;
-        if      (row == 0 && col == 0) bBlendMode[0] = true;
-        else if (row == 1 && col == 0) bBlendMode[1] = true;
-        else if (row == 2 && col == 0) bBlendMode[2] = true;
-        else if (row == 3 && col == 0) bBlendMode[3] = true;
+        if      (row == 0 && col == 0){
+            bBlendMode[0] = true;
+            m.setAddress( "/blendmode/1" );
+            m.addIntArg(0);
+        }
+        else if (row == 1 && col == 0){
+            bBlendMode[1] = true;
+            m.setAddress( "/blendmode/2" );
+            m.addIntArg(0);
+        }
+        else if (row == 2 && col == 0){
+            bBlendMode[2] = true;
+            m.setAddress( "/blendmode/3" );
+            m.addIntArg(0);
+        }
+        else if (row == 3 && col == 0){
+            bBlendMode[3] = true;
+            m.setAddress( "/blendmode/4" );
+            m.addIntArg(0);
+        }
+		sender.sendMessage( m );
+
     }
+//    else if(name == "IP"){
+//        ofxUITextInput *textinput = (ofxUITextInput *) e.widget;
+//        if(textinput->getTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS){
+//            if(!keyboard->isKeyboardShowing()){
+//                keyboard->openKeyboard();
+//                keyboard->setVisible(true);
+//            }
+//        }
+//        else if(textinput->getTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER){
+//            ip = textinput->getTextString();
+//        }
+//        else if(textinput->getTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS){
+//            keyboard->setVisible(false);
+//        }
+//    }
+//
+//    else if(name == "PORT"){
+//        ofxUITextInput *textinput = (ofxUITextInput *) e.widget;
+//        if(textinput->getTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER){
+//            port = ofToInt(textinput->getTextString());
+//        }
+//
+//    }
 }
 
 
@@ -271,9 +415,6 @@ void testApp::setGUI(){
     gui->addSpacer(length-xInit, 15);
 	
     gui->addWidgetDown(new ofxUILabel("Flock Mode", OFX_UI_FONT_MEDIUM));
-    
-    
-    
     gui->addWidgetDown(new ofxUIToggleMatrix (dim, dim, 2, 4, "FLOCKMODE"));
     ofxUIToggleMatrix* mtx = (ofxUIToggleMatrix *) gui->getWidget("FLOCKMODE");
     mtx->setAllowMultiple(false);
@@ -344,7 +485,7 @@ void testApp::setGUI4(){
     float xInit = 10;
     float length = 500-xInit;
     
-    gui4 = new ofxUICanvas(500, 550, length+xInit, ofGetHeight());
+    gui4 = new ofxUICanvas(500, 550, length+xInit, 130);
     gui4->addWidgetDown(new ofxUILabel("Blend Mode", OFX_UI_FONT_MEDIUM));
     gui4->addWidgetDown(new ofxUIToggleMatrix (dim, dim, 2, 4, "BLENDMODE"));
     ofxUIToggleMatrix* mtx = (ofxUIToggleMatrix *) gui4->getWidget("BLENDMODE");
@@ -353,3 +494,16 @@ void testApp::setGUI4(){
 	ofAddListener(gui4->newGUIEvent,this,&testApp::guiEvent);
 
 }
+//void testApp::setGUI5(){
+//    
+//    float xInit = 10;
+//    float length = 500-xInit;
+//    
+//    gui5 = new ofxUICanvas(40, 650, length+xInit, 100);
+//	gui5->addWidgetDown(new ofxUILabel("IP :", OFX_UI_FONT_MEDIUM));
+//	gui5->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
+//	gui5->addTextInput("IP", "0.0.0.0", length-xInit);
+//	gui5->addWidgetDown(new ofxUILabel("PORT :", OFX_UI_FONT_MEDIUM));
+//    gui5->addTextInput("PORT", "12345", length-xInit);
+//	gui5->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
+//}

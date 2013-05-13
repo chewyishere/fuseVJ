@@ -6,9 +6,7 @@
 #include "ofxOsc.h"
 #include "ofxUI.h"
 
-#define HOST "169.254.92.237"
 #define PORT 12345
-
 class testApp : public ofxiPhoneApp {
 
 public:
@@ -39,12 +37,14 @@ public:
     void setGUI2();
     void setGUI3();
     void setGUI4();
+//    void setGUI5();
     
     ofxUICanvas *gui;
     ofxUICanvas *gui1;
     ofxUICanvas *gui2;
     ofxUICanvas *gui3;
     ofxUICanvas *gui4;
+//    ofxUICanvas *gui5;
 	
     bool hideGUI;
 	float red, green, blue;
@@ -59,6 +59,8 @@ public:
 
     
     //osc
+    string ip;
+    int port;
     ofxOscSender sender;
     bool bFlockMode[8], bDrawMode[8], bBlendMode[4];
     bool bDrawScreen, bClearScreen, bAllColor;
@@ -68,5 +70,13 @@ public:
     //color picker interface
     ofImage img;
     ofImage sketch;
+    
+    
+    ofxiPhoneKeyboard * iosKeyboard;
+    string inputModeName;
+    ofPoint keyModeButton;
+    float keyModeButtonRad;
+    bool keyMode;
+    
 };
 
