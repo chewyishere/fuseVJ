@@ -33,11 +33,13 @@ public:
     vector<int> getToggleMatrixValues(string received_name , ofxUIEventArgs &e);
     
     //ofxUI
+    void setGUI();
     void setGUI1();
     void setGUI2();
     void setGUI3();
     void setGUI4();
     
+    ofxUICanvas *gui;
     ofxUICanvas *gui1;
     ofxUICanvas *gui2;
     ofxUICanvas *gui3;

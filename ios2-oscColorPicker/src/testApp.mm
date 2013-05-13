@@ -9,10 +9,12 @@ void testApp::setup(){
 	ofSetFrameRate(60);
     ofEnableSmoothing();
     
+    setGUI();
 	setGUI1();
     setGUI2();
     setGUI3();
     setGUI4();
+    gui->setDrawBack(false);
     gui1->setDrawBack(false);
     gui2->setDrawBack(false);
     gui3->setDrawBack(false);
@@ -74,12 +76,13 @@ void testApp::draw(){
     ofBackground(0);
     ofSetColor(255,100);
     sketch.draw(0,-75, ofGetWidth() ,ofGetHeight()+75);
-    ofSetColor(150,150);
-    ofSetLineWidth(0.5);
-    drawGrid(10, 10);
     
     ofSetColor(255,255);
     img.draw(500,200);
+    
+    ofSetColor(150,150);
+    ofSetLineWidth(0.5);
+    drawGrid(10, 10);
     
 	// display instructions
 	string buf;
@@ -205,44 +208,21 @@ void testApp::guiEvent(ofxUIEventArgs &e){
 		cout << "FADE " << slider->getScaledValue() << endl;
 		fadeBar = slider->getScaledValue();
 	}
-    
-    
-    
-    
-	else if(name == "DRAW GRID")
-	{
-		ofxUIButton *button = (ofxUIButton *) e.widget;
-		bdrawGrid = button->getValue();
-	}
-	else if(name == "D_GRID")
-	{
-		ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
-		bdrawGrid = toggle->getValue();
-	}
-    else if(name == "TEXT INPUT")
-    {
-        ofxUITextInput *textinput = (ofxUITextInput *) e.widget;
-        if(textinput->getTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER)
-        {
-            cout << "ON ENTER: ";
-            //            ofUnregisterKeyEvents((testApp*)this);
-        }
-        else if(textinput->getTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS)
-        {
-            cout << "ON FOCUS: ";
-        }
-        else if(textinput->getTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
-        {
-            cout << "ON BLUR: ";
-            //            ofRegisterKeyEvents(this);
-        }
-        string output = textinput->getTextString();
-        cout << output << endl;
+    else if(name == "DRAW SCREEN"){
+        ofxUIButton *button = (ofxUIButton *) e.widget;
+        bDrawScreen = button->getValue();
     }
+    else if(name == "CLEAR SCREEN"){
+        ofxUIButton *button = (ofxUIButton *) e.widget;
+        bClearScreen = button ->getValue();
+    }
+    
+    
+    
 }
 
 
-void testApp::setGUI1(){
+void testApp::setGUI(){
 	
     
 	float dim = 100;
@@ -257,62 +237,86 @@ void testApp::setGUI1(){
     
 	hideGUI = false;
 	
-	gui1 = new ofxUICanvas(40, 60, length+xInit, 660);
-	gui1->addWidgetDown(new ofxUILabel("FUSE Controller", OFX_UI_FONT_LARGE));
+	gui = new ofxUICanvas(40, 60, length+xInit, 660);
+	gui->addWidgetDown(new ofxUILabel("FUSE Controller", OFX_UI_FONT_LARGE));
     
-    gui1->addSpacer(length-xInit, 15);
+    gui->addSpacer(length-xInit, 15);
 	
-    gui1->addWidgetDown(new ofxUILabel("Flock Mode", OFX_UI_FONT_MEDIUM));
-    gui1->addWidgetDown(new ofxUIToggleMatrix (dim, dim, 2, 4, "FLOCK MODE"));
-    ofxUIToggleMatrix* mtx = (ofxUIToggleMatrix *) gui1->getWidget("FLOCK MODE");
+    gui->addWidgetDown(new ofxUILabel("Flock Mode", OFX_UI_FONT_MEDIUM));
+    gui->addWidgetDown(new ofxUIToggleMatrix (dim, dim, 2, 4, "FLOCK MODE"));
+    ofxUIToggleMatrix* mtx = (ofxUIToggleMatrix *) gui->getWidget("FLOCK MODE");
     mtx->setAllowMultiple(false);
 //    mtx->getToggles()[0].set
     
-    gui1->addSpacer(length-xInit, 15);
+    gui->addSpacer(length-xInit, 15);
     
-    gui1->addWidgetDown(new ofxUILabel("Draw Mode", OFX_UI_FONT_MEDIUM));
-    gui1->addWidgetDown(new ofxUIToggleMatrix (dim, dim, 2, 4, "DRAW MODE"));
-    ofxUIToggleMatrix* mtx2 = (ofxUIToggleMatrix *) gui1->getWidget("DRAW MODE");
+    gui->addWidgetDown(new ofxUILabel("Draw Mode", OFX_UI_FONT_MEDIUM));
+    gui->addWidgetDown(new ofxUIToggleMatrix (dim, dim, 2, 4, "DRAW MODE"));
+    ofxUIToggleMatrix* mtx2 = (ofxUIToggleMatrix *) gui->getWidget("DRAW MODE");
     mtx2->setAllowMultiple(false);
     
-    gui1->addSpacer(length-xInit, 15);
+    gui->addSpacer(length-xInit, 15);
 	
-    gui1->addWidgetDown(new ofxUILabel("fadeAmount", OFX_UI_FONT_MEDIUM));
-	gui1->addSlider("FADE", 0.0, 255.0, fadeBar, 415, dim/2);
+    gui->addWidgetDown(new ofxUILabel("fadeAmount", OFX_UI_FONT_MEDIUM));
+	gui->addSlider("FADE", 0.0, 255.0, fadeBar, 415, dim/2);
     
+	ofAddListener(gui->newGUIEvent,this,&testApp::guiEvent);
+}
+void testApp::setGUI1(){
+    
+	float dim = 150;
+    float xInit = 10;
+    float length = 160-xInit;
+    
+    gui1 = new ofxUICanvas(500, 80, length+xInit, 180);
+    
+    gui1->addLabel("Draw Screen Mode", OFX_UI_FONT_SMALL);
+    gui1->addButton("DRAW SCREEN", false, dim,dim/2);
 	ofAddListener(gui1->newGUIEvent,this,&testApp::guiEvent);
 }
+
 void testApp::setGUI2(){
     
-	float dim = 90;
+	float dim = 150;
     float xInit = 10;
-    float length = 400-xInit;
+    float length = 160-xInit;
     
-    gui2 = new ofxUICanvas(500, 80, length+xInit, 120);
-    gui2->addButton("DRAW SCREEN", false, dim*2, dim);
+    gui2 = new ofxUICanvas(690, 80, length+xInit, 180);
     
+    gui2->addLabel("Clear Screen", OFX_UI_FONT_SMALL);
+    gui2->addButton("CLEAR SCREEN", false, dim,dim/2);
 	ofAddListener(gui2->newGUIEvent,this,&testApp::guiEvent);
 }
 void testApp::setGUI3(){
     
-	float dim = 90;
+	float dim = 50;
     float xInit = 10;
-    float length = 400-xInit;
+    float length = 70-xInit;
     
-    gui3 = new ofxUICanvas(830, 80, length+xInit, 500);
-    gui3->addButton("CLEAR SCREEN", false, dim*2, dim);
+    satBar = 200;
+    
+    gui3 = new ofxUICanvas(895, 80, length+xInit, 500);
+    gui3->addLabel("All Color", OFX_UI_FONT_SMALL);
+    gui3->addWidgetDown(new ofxUIButton("ALL COLOR", false, dim, dim*3/2));
+    
+    gui3->addSpacer(length-xInit, 15);
+    gui3->addSlider("Saturation", 0, 255, satBar, dim, 340);
+    
     
 	ofAddListener(gui3->newGUIEvent,this,&testApp::guiEvent);
     
 }
 void testApp::setGUI4(){
     
-	float dim = 90;
+	float dim = 110;
     float xInit = 10;
-    float length = 400-xInit;
+    float length = 500-xInit;
     
     gui4 = new ofxUICanvas(500, 550, length+xInit, ofGetHeight());
-    gui4->addButton("Draw Screen", false, dim, dim*2);
+    gui4->addWidgetDown(new ofxUILabel("Blend Mode", OFX_UI_FONT_MEDIUM));
+    gui4->addWidgetDown(new ofxUIToggleMatrix (dim, dim, 2, 4, "BLEND MODE"));
+    ofxUIToggleMatrix* mtx = (ofxUIToggleMatrix *) gui4->getWidget("BLEND MODE");
+    mtx->setAllowMultiple(false);
     
 	ofAddListener(gui4->newGUIEvent,this,&testApp::guiEvent);
 

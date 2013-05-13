@@ -41,7 +41,6 @@
 		9fef7afad4ddffd2a55aa54a1c323431 /* simpleFileLister.cpp in Sources */ = {isa = PBXBuildFile; fileRef = bdd9e60039a29dafb013cdbda2b6bd7f /* simpleFileLister.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		CD53D3DC1736D19A0069CC0C /* particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD53D3DA1736D19A0069CC0C /* particle.cpp */; };
-		CD53D3DF1736D1AF0069CC0C /* timePoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD53D3DD1736D1AF0069CC0C /* timePoint.cpp */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
 		E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */; };
@@ -167,7 +166,6 @@
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		CD53D3DA1736D19A0069CC0C /* particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = particle.cpp; sourceTree = "<group>"; };
 		CD53D3DB1736D19A0069CC0C /* particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = particle.h; sourceTree = "<group>"; };
-		CD53D3DD1736D1AF0069CC0C /* timePoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = timePoint.cpp; sourceTree = "<group>"; };
 		CD53D3DE1736D1AF0069CC0C /* timePoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = timePoint.h; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -415,13 +413,12 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				CD53D3DD1736D1AF0069CC0C /* timePoint.cpp */,
-				CD53D3DE1736D1AF0069CC0C /* timePoint.h */,
-				CD53D3DA1736D19A0069CC0C /* particle.cpp */,
-				CD53D3DB1736D19A0069CC0C /* particle.h */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
-				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
+				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
+				CD53D3DB1736D19A0069CC0C /* particle.h */,
+				CD53D3DA1736D19A0069CC0C /* particle.cpp */,
+				CD53D3DE1736D1AF0069CC0C /* timePoint.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -691,7 +688,6 @@
 				9fef7afad4ddffd2a55aa54a1c323431 /* simpleFileLister.cpp in Sources */,
 				d41b30cf66da734f99a45d5e96d168e4 /* simpleLogger.cpp in Sources */,
 				CD53D3DC1736D19A0069CC0C /* particle.cpp in Sources */,
-				CD53D3DF1736D1AF0069CC0C /* timePoint.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
