@@ -114,8 +114,7 @@ void testApp::draw(){
 //--------------------------------------------------------------
 
 void testApp::touchDown(ofTouchEventArgs & touch){
-	if (touch.id == 1){
-		
+    if (330 < touch.x == 650 && 25< touch.y< 45){
 		if(!iosKeyboard->isKeyboardShowing()){
 			iosKeyboard->openKeyboard();
 			iosKeyboard->setVisible(true);
@@ -485,7 +484,7 @@ void testApp::setGUI4(){
     float xInit = 10;
     float length = 500-xInit;
     
-    gui4 = new ofxUICanvas(500, 550, length+xInit, 130);
+    gui4 = new ofxUICanvas(500, 550, length+xInit, 150);
     gui4->addWidgetDown(new ofxUILabel("Blend Mode", OFX_UI_FONT_MEDIUM));
     gui4->addWidgetDown(new ofxUIToggleMatrix (dim, dim, 2, 4, "BLENDMODE"));
     ofxUIToggleMatrix* mtx = (ofxUIToggleMatrix *) gui4->getWidget("BLENDMODE");
