@@ -45,8 +45,6 @@ class testApp : public ofBaseApp{
     float	radius;
     float	strength;
 	
-
-    
     
     vector < timePoint > pts;
     float startTime;

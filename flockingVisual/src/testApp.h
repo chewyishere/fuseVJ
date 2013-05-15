@@ -8,7 +8,7 @@
 
 #include "ofxOsc.h"
 #define PORT 9000
-#define NUM_MSG_STRINGS 20
+#define NUM_MSG_STRINGS 20u 
 
 
 class testApp : public ofBaseApp{

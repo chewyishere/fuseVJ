@@ -79,7 +79,11 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){
-		
+    
+    rgbaFboFloat.begin();
+    drawFboTest();
+	rgbaFboFloat.end();
+    
 	panel.update();
 	
 	
@@ -139,10 +143,7 @@ void testApp::update(){
 
     }
     
-    rgbaFboFloat.begin();
-    drawFboTest();
-	rgbaFboFloat.end();
-    
+  
     
     // sort all the particles:
        
@@ -172,19 +173,6 @@ void testApp::update(){
         particles[i]->update();
     }
 
-	
-	// wrap torroidally.
-//	for (int i = 0; i < particles.size(); i++){
-//		ofVec2f pos = particles[i]->pos;
-//		if (pos.x < 0) pos.x = ofGetWidth();
-//		if (pos.x > ofGetWidth()) pos.x = 0;
-//		if (pos.y < 0) pos.y = ofGetHeight();
-//		if (pos.y > ofGetHeight()) pos.y = 0;
-//		particles[i]->pos = pos;
-//	}
-//    
-    
-    
     ofPushView();
     ofPushStyle();
     
@@ -193,11 +181,7 @@ void testApp::update(){
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
     ofClear(0, 255);
     ofSetColor( ofMap( fade , 0.0f, 0.5f, 0.0f, 1.0f, true) * 255,255);
-    
-//    font.drawString(message,
-//                    width*0.5f - font.getStringBoundingBox(message,0,0).width*0.5f,
-//                    height*0.5f);
-//    
+
     ofDisableBlendMode();
     ofPopMatrix();
     
@@ -213,12 +197,10 @@ void testApp::update(){
     
     if(number==1) {
         
-        // background particles
         
-        
-        rgbaFboFloat.begin();
-        drawFboTest();
-        rgbaFboFloat.end();
+        //rgbaFboFloat.begin();
+        //drawFboTest();
+        //rgbaFboFloat.end();
         
         
         // sort all the particles
@@ -261,36 +243,14 @@ void testApp::update(){
         }
     
         
-        ofPushView();
-        ofPushStyle();
-        
-        ofPushMatrix();
-        
-        ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-        ofClear(0, 255);
-        ofSetColor( ofMap( fade , 0.0f, 0.5f, 0.0f, 1.0f, true) * 255,255);
-
-        ofDisableBlendMode();
-        ofPopMatrix();
-        
-        ofPopView();
-        ofPopStyle();
-        
-        ofSetWindowTitle(ofToString(ofGetFrameRate()));
-        
-
-        
+             
     }
     
     
-    
-    // number == 2 addAttractionForce to Mouse +++++++++++++++++++++++++++++++++++++
+    // number == 2  +++++++++++++++++++++++++++++++++++++
     
     if(number==2)  {
-        
-        
-        // background particles
-        
+ 
         sort( particles.begin(), particles.end(), comparisonFunction );
         
         for (int i = 0; i < particles.size(); i++){
@@ -303,32 +263,18 @@ void testApp::update(){
             particles[i]->damping = 0.192;
         }
         
-        
-        for (int i = 0; i < particles.size(); i++){
-            particles[i]->resetForce();
-        }
-        
-        
         for (int i = 0; i < particles.size(); i++){
             for (int j = i-1; j >= 0; j--){
                 if ( fabs(particles[j]->pos.x - particles[i]->pos.x) >	50) break;
                 if (i != j){
                     particles[i]->addForFlocking(*particles[j]);
                 }
-            }
-        }
-        
-        
-        
-        for (int i = 0; i < particles.size(); i++){
-          //  particles[i]->addFlockingForce();
-            particles[i]->addDampingForce();
-            particles[i]->update();
         }
         
     }
+    }
     
-    // number == 3  addRepulsionForce to Mouse  +++++++++++++++++++++++++++++++++++++
+    // number == 3   +++++++++++++++++++++++++++++++++++++
     
     if(number==3)  {
         
@@ -347,50 +293,13 @@ void testApp::update(){
         }
         
         
-        for (int i = 0; i < particles.size(); i++){
-            particles[i]->resetForce();
-        }
-        
-        
-        for (int i = 0; i < particles.size(); i++){
-            for (int j = i-1; j >= 0; j--){
-                if ( fabs(particles[j]->pos.x - particles[i]->pos.x) >	50) break;
-                if (i != j){
-                    particles[i]->addForFlocking(*particles[j]);
-                }
-            }
-        }
-        
-        
-        
-        for (int i = 0; i < particles.size(); i++){
-            particles[i]->addFlockingForce();
-            particles[i]->addDampingForce();
-            particles[i]->update();
-        }
-        
-        
-        // wrap torroidally.
-//        for (int i = 0; i < particles.size(); i++){
-//            ofVec2f pos = particles[i]->pos;
-//            if (pos.x < 0) pos.x = ofGetWidth();
-//            if (pos.x > ofGetWidth()) pos.x = 0;
-//            if (pos.y < 0) pos.y = ofGetHeight();
-//            if (pos.y > ofGetHeight()) pos.y = 0;
-//            particles[i]->pos = pos;
-//        }
-        
     }
         
         
-   // number == 4  seperation.distance +++++++++++++++++++++++++++++++++++++
+   // number == 4   +++++++++++++++++++++++++++++++++++++
     
     if(number == 4) {
-        
-        // background particles
-        
-        sort( particles.begin(), particles.end(), comparisonFunction );
-        
+         
         for (int i = 0; i < particles.size(); i++){
             particles[i]->cohesion.strength = 0.19;
             particles[i]->cohesion.distance = 200;
@@ -400,30 +309,7 @@ void testApp::update(){
             particles[i]->seperation.distance = 200;
             particles[i]->damping = 0.45;
         }
-        
-        
-        for (int i = 0; i < particles.size(); i++){
-            particles[i]->resetForce();
-        }
-        
-        
-        for (int i = 0; i < particles.size(); i++){
-            for (int j = i-1; j >= 0; j--){
-                if ( fabs(particles[j]->pos.x - particles[i]->pos.x) >	50) break;
-                if (i != j){
-                    particles[i]->addForFlocking(*particles[j]);
-                }
-            }
-        }
-        
-        
-        
-        for (int i = 0; i < particles.size(); i++){
-            particles[i]->addFlockingForce();
-            particles[i]->addDampingForce();
-            particles[i]->update();
-        }
-        
+    
         
 }
         
@@ -431,9 +317,6 @@ void testApp::update(){
     // number == 5  +++++++++++++++++++++++++++++++++++++
     
     if(number == 5) {
-        // background particles
-        
-        sort( particles.begin(), particles.end(), comparisonFunction );
         
         for (int i = 0; i < particles.size(); i++){
             particles[i]->cohesion.strength = 0.1;
@@ -445,32 +328,9 @@ void testApp::update(){
             particles[i]->damping = 0.68;
         }
         
-        
-        for (int i = 0; i < particles.size(); i++){
-            particles[i]->resetForce();
-        }
-        
-        
-        for (int i = 0; i < particles.size(); i++){
-            for (int j = i-1; j >= 0; j--){
-                if ( fabs(particles[j]->pos.x - particles[i]->pos.x) >	50) break;
-                if (i != j){
-                    particles[i]->addForFlocking(*particles[j]);
-                }
-            }
-        }
-        
-        
-        
-        for (int i = 0; i < particles.size(); i++){
-            particles[i]->addFlockingForce();
-            particles[i]->addDampingForce();
-            particles[i]->update();
-        }
-        
     }
         
-    // number == 6 repulsion = sound +++++++++++++++++++++++++++++++++++++
+    // number == 6 +++++++++++++++++++++++++++++++++++++
     
     if(number == 6) {
         
@@ -485,47 +345,20 @@ void testApp::update(){
                     particles[i]->addForFlocking(*particles[j]);
                 }
             }
-            
-        //particles[i]->addRepulsionForce(mouseX, mouseY, smoothedVol*100, 0.4);
-        }
-        
+         
         for (int i = 0; i < particles.size(); i++){
-            particles[i]->addFlockingForce();
-            particles[i]->addDampingForce();
-            particles[i]->update();
-        }
-        
-        
-        // wrap torroidally.
-        for (int i = 0; i < particles.size(); i++){
-            ofVec2f pos = particles[i]->pos;
-            if (pos.x < 0) pos.x = ofGetWidth();
-            if (pos.x > ofGetWidth()) pos.x = 0;
-            if (pos.y < 0) pos.y = ofGetHeight();
-            if (pos.y > ofGetHeight()) pos.y = 0;
-            particles[i]->pos = pos;
-        }
-        
-        for (int i = 0; i < particles.size(); i++){
-           // particles[i]->alignment.distance = smoothedVol ;
-            particles[i]->alignment.strength = 30;
+            particles[i]->alignment.strength = 0.5;
             particles[i]-> damping = 0.15;
-            
-            //  particles[i].addAttractionForce(mouseX, mouseY, 1000, 0.5);
-            
+    
+            }
         }
-        
     }
     
-    
-    // number == 7 == Launch +++++++++++++++++++++++++++++++++++++
+    // number == 7  +++++++++++++++++++++++++++++++++++++
     
     if(number == 7) {
         
-        for (int i = 0; i < particles.size(); i++){
-            particles[i]->resetForce();
-        }
-        
+         
         for (int i = 0; i < particles.size(); i++){
             
            // particles[i]->addAttractionForce(mouseX, mouseY, 1000, 0.5);
@@ -538,15 +371,10 @@ void testApp::update(){
                     particles[i]->addAttractionForce(*particles[j], radius, strength);
                 }
             }
-        }
-        
-        for (int i = 0; i < particles.size(); i++){
-            particles[i]->addDampingForce();
-            particles[i]->update();
+            
         }
         
     }
-    
     
     //tail testing
     timePoint temp;
@@ -572,17 +400,7 @@ void testApp::drawFboTest(){
 		ofClear(255,255,255, 0);
 	}
 	
-	//some different alpha values for fading the fbo
-	//the lower the number, the longer the trails will take to fade away.
-    //	fadeAmnt = 40;
-    //	if(ofGetKeyPressed('1')){
-    //		fadeAmnt = 1;
-    //	}else if(ofGetKeyPressed('2')){
-    //		fadeAmnt = 5;
-    //	}else if(ofGetKeyPressed('3')){
-    //		fadeAmnt = 15;
-    //	}
-    
+	    
 	//1 - Fade Fbo
 	
 	//this is where we fade the fbo
@@ -627,8 +445,6 @@ void testApp::drawFboTest(){
     
 }
 
-
-//--------------------------------------------------------------
 
 //--------------------------------------------------------------
 void testApp::draw(){
@@ -698,8 +514,6 @@ void testApp::keyPressed(int key){
         
 	}
     
-    
-
 
 }
 

@@ -148,17 +148,30 @@ void testApp::update(){
             // check for mouse moved message
             if(m.getAddress() == "/accel/x"){
             // rSmooth = m.getArgAsFloat(0)/2;
-                  accelX = m.getArgAsFloat(0);
+                particles2[i]->r3 = (m.getArgAsFloat(0)+rSmooth)/2;
+                particles2[i]->vel.x += (m.getArgAsFloat(0)+rSmooth)/2;
+                accelX = m.getArgAsFloat(0);
             }
 
             if(m.getAddress() == "/accel/y"){
                 rSmooth = m.getArgAsFloat(0)/2;
+<<<<<<< HEAD
                 flockPtc[i]->r2 = (m.getArgAsFloat(0)+rSmooth)/5;
+=======
+                particles2[i]->r2 = (m.getArgAsFloat(0)+rSmooth)/2;
+                particles2[i]->vel.y += (m.getArgAsFloat(0)+rSmooth)/2;
+
+>>>>>>> adjustments
                 accelY = m.getArgAsFloat(0);
             }
              if(m.getAddress() == "/accel/z"){
                  rSmooth = m.getArgAsFloat(0)/2;
+<<<<<<< HEAD
                  flockPtc[i]->r1 = (m.getArgAsFloat(0)+rSmooth)/5;
+=======
+                 particles2[i]->r1 = (m.getArgAsFloat(0)+rSmooth)/2;
+                  particles2[i]->vel.y = (m.getArgAsFloat(0)+rSmooth)/2;
+>>>>>>> adjustments
                  accelZ = m.getArgAsFloat(0);
              }
             
@@ -248,12 +261,18 @@ void testApp::update(){
         for (int i = 0; i < funkyPtc.size(); i++){
             // check for mouse moved message
             if(m.getAddress() == "/accel/x"){
+<<<<<<< HEAD
                 funkyPtc[i].r3 = m.getArgAsFloat(0);
                // funkyPtc[i].vel.x += m.getArgAsFloat(0);
+=======
+                particles[i].r3 = m.getArgAsFloat(0);
+                particles[i].vel.x += m.getArgAsFloat(0);
+>>>>>>> adjustments
             cout << m.getArgAsFloat(0) << endl;
             }
             
             if(m.getAddress() == "/accel/y"){
+<<<<<<< HEAD
                 funkyPtc[i].r2 = m.getArgAsFloat(0);
             //    funkyPtc[i].vel.y += m.getArgAsFloat(0);
             }
@@ -261,6 +280,15 @@ void testApp::update(){
             if(m.getAddress() == "/accel/z"){
                 funkyPtc[i].r1 = m.getArgAsFloat(0);
             //    funkyPtc[i].vel.z += m.getArgAsFloat(0);
+=======
+                particles[i].r2 = m.getArgAsFloat(0);
+                particles[i].vel.y += m.getArgAsFloat(0);
+            }
+            
+            if(m.getAddress() == "/accel/z"){
+                particles[i].r1 = m.getArgAsFloat(0);
+                particles[i].vel.z += m.getArgAsFloat(0);
+>>>>>>> adjustments
             }
             
             
