@@ -30,6 +30,7 @@ void testApp::setup(){
     rgbaFboFloat.end();
     
     fadeAmnt=10;
+    numberBlend = 4;
     
     //flocking particles
     // THE FLOWS ----------------------------
@@ -254,20 +255,20 @@ void testApp::update(){
         }
 
         if(m.getAddress() == "/blendmode/1" ){
-            number = 21;
+            numberBlend = 1;
         }
         if(m.getAddress() == "/blendmode/2" ){
-            number = 22;
+            numberBlend = 2;
         }
-
+        
         if(m.getAddress() == "/blendmode/3" ){
-            number = 23;
+            numberBlend = 3;
         }
-
+        
         if(m.getAddress() == "/blendmode/4" ){
-            number = 24;
+            numberBlend = 4;
         }
-    
+        
         
 // particles
         
@@ -380,7 +381,11 @@ void testApp::update(){
         
 	}
 
-    
+    if( numberBlend == 1)blendMode = OF_BLENDMODE_ADD;
+    else if( numberBlend == 2)blendMode = OF_BLENDMODE_SCREEN;
+    else if( numberBlend == 3)blendMode = OF_BLENDMODE_SUBTRACT;
+    else if( numberBlend == 4)blendMode = OF_BLENDMODE_DISABLED;
+
     // number == 1 +++++++++++++++++++++++++++++++++++++
     
     
@@ -1176,29 +1181,22 @@ void testApp::keyPressed(int key){
 
   //-------------------- BlendMode ---------------
     if( key == 'z' ){
-        number= 20;
-        ofBackground(255,255,0,100); 
-        blendMode = OF_BLENDMODE_DISABLED;
+        numberBlend = 1;
 	}
     if( key == 'x' ){
-        number= 21;
-		blendMode = OF_BLENDMODE_ADD;
+        numberBlend = 2;
 	}
     if( key == 'c' ){
-        number= 22;
-        blendMode = OF_BLENDMODE_SCREEN;
+        numberBlend = 3;
 	}
     if( key == 'v' ){
-        number= 23;
-		blendMode = OF_BLENDMODE_SUBTRACT;
+        numberBlend = 4;
 	}
     if( key == 'b' ){
-        number= 24;
-		blendMode = OF_BLENDMODE_ALPHA;
+        numberBlend = 5;
 	}
     if( key == 'n' ){
-        number= 25;
-		blendMode = OF_BLENDMODE_MULTIPLY;
+        numberBlend = 6;
 	}
     if( key == 'f') ofToggleFullscreen();
     if( key == 'g') CGDisplayHideCursor(kCGDirectMainDisplay);

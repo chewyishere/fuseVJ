@@ -77,7 +77,7 @@ public:
     
     //mode selector
     int number;
-
+    int numberBlend;
     
     //blendmode
     ofBlendMode blendMode;
