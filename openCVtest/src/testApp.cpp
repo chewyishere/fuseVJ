@@ -6,6 +6,11 @@ bool comparisonFunction(  particle * a, particle * b ) {
 }
 
 // comparison routine for sort...
+bool comparisonFunctionY(  particle * a, particle * b ) {
+	return a->pos.y < b->pos.y;
+}
+
+// comparison routine for sort...
 bool comparisonFunctionAge(  particle * a, particle * b ) {
 	return a->age < b->age;
 }
@@ -58,10 +63,7 @@ void testApp::setup(){
 	ofClear(255,255,255, 0);
     rgbaFbo.end();
     
-//    rgbaFboFloat.begin();
-//	ofClear(255,255,255, 0);
-//    rgbaFboFloat.end();
-//    
+  
     fadeAmnt=50;
     
     
@@ -73,7 +75,10 @@ void testApp::setup(){
 		particles.push_back(myParticle);
 		
         
-	}
+        bRepel		= true;
+        radius		= 40;
+        strength	= 0.9f;
+    }
 
 }
 
@@ -93,10 +98,9 @@ void testApp::update(){
 	video.update();
 	
 	if (video.isFrameNew()){
-		
 		videoColorCvImage.setFromPixels(video.getPixels(), width, height);
 		videoGrayscaleCvImage = videoColorCvImage;
-		
+		videoGrayscaleCvImage.mirror(false, true);
 		
 		videoDiffImage.absDiff(videoGrayscaleCvImage, videoPrevFrameImage);
 		videoDiffImage.threshold(threshold);
@@ -147,7 +151,7 @@ void testApp::update(){
     
     // sort all the particles:
        
-    sort( particles.begin(), particles.end(), comparisonFunction );
+    //sort( particles.begin(), particles.end(), comparisonFunction );
     
       
     for (int i = 0; i < particles.size(); i++){
@@ -159,13 +163,13 @@ void testApp::update(){
     
     for (int i = 0; i < particles.size(); i++){
         for (int j = i-1; j >= 0; j--){
-            if ( fabs(particles[j]->pos.x - particles[i]->pos.x) >	50) break;
-            if (i != j){
+//            if ( fabs(particles[j]->pos.x - particles[i]->pos.x) >	50) break;
+//            if (i != j){
                 particles[i]->addForFlocking(*particles[j]);
             }
         }
-        particles[i]->addRepulsionForce(mouseX,mouseY, 40, 0.4);
-    }
+//        particles[i]->addRepulsionForce(mouseX,mouseY, 40, 0.4);
+//    }
     
     for (int i = 0; i < particles.size(); i++){
         particles[i]->addFlockingForce();
@@ -173,23 +177,7 @@ void testApp::update(){
         particles[i]->update();
     }
 
-    ofPushView();
-    ofPushStyle();
     
-    ofPushMatrix();
-    
-    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-    ofClear(0, 255);
-    ofSetColor( ofMap( fade , 0.0f, 0.5f, 0.0f, 1.0f, true) * 255,255);
-
-    ofDisableBlendMode();
-    ofPopMatrix();
-    
-    ofPopView();
-    ofPopStyle();
-    
-    ofSetWindowTitle(ofToString(ofGetFrameRate()));
-
     
     
     // number == 1 +++++++++++++++++++++++++++++++++++++
@@ -197,54 +185,18 @@ void testApp::update(){
     
     if(number==1) {
         
-        
-        //rgbaFboFloat.begin();
-        //drawFboTest();
-        //rgbaFboFloat.end();
-        
-        
-        // sort all the particles
-        
-        
-        sort( particles.begin(), particles.end(), comparisonFunction );
-
-        float fade = abs(sin( ofGetElapsedTimef()*0.099 ));
-        
-        for (int i = 0; i < particles.size(); i++){
+           for (int i = 0; i < particles.size(); i++){
             particles[i]->cohesion.strength = 0.1;
             particles[i]->cohesion.distance = 50;
             particles[i]->alignment.strength =  0.7;
             particles[i]->alignment.distance = 42;
             particles[i]->seperation.strength = 0.07;
             particles[i]->seperation.distance = 38;
-            particles[i]->damping = 0.1;
+            particles[i]->damping = 0.5;
         }
         
-        
-        for (int i = 0; i < particles.size(); i++){
-            particles[i]->resetForce();
-        }
-        
-        
-        for (int i = 0; i < particles.size(); i++){
-            for (int j = i-1; j >= 0; j--){
-                if ( fabs(particles[j]->pos.x - particles[i]->pos.x) >	50) break;
-                if (i != j){
-                    particles[i]->addForFlocking(*particles[j]);
-                }
-            }
-        }
-        
-        
-        for (int i = 0; i < particles.size(); i++){
-            particles[i]->addFlockingForce();
-            particles[i]->addDampingForce();
-            particles[i]->update();
-        }
-    
-        
-             
     }
+    
     
     
     // number == 2  +++++++++++++++++++++++++++++++++++++
@@ -280,19 +232,28 @@ void testApp::update(){
         
         // background particles
         
-        sort( particles.begin(), particles.end(), comparisonFunction );
+        sort( particles.begin(), particles.end(), comparisonFunctionY );
         
         for (int i = 0; i < particles.size(); i++){
             particles[i]->cohesion.strength = 0.2;
             particles[i]->cohesion.distance = 200;
-            particles[i]->alignment.strength =  0.24;
-            particles[i]->alignment.distance = 198;
+            particles[i]->alignment.strength =  0.2;
+            particles[i]->alignment.distance = 158;
             particles[i]->seperation.strength = 0.4;
             particles[i]->seperation.distance = 33;
-            particles[i]->damping = 0.029;
+            particles[i]->damping = 0.05;
         }
         
-        
+        for (int i = 0; i < particles.size(); i++){
+            for (int j = i-1; j >= 0; j--){
+                if ( fabs(particles[j]->pos.y - particles[i]->pos.y) >	50) break;
+                if (i != j){
+                    particles[i]->addForFlocking(*particles[j]);
+                }
+            }
+            
+        }
+
     }
         
         
@@ -333,21 +294,17 @@ void testApp::update(){
     // number == 6 +++++++++++++++++++++++++++++++++++++
     
     if(number == 6) {
-        
-        for (int i = 0; i < particles.size(); i++){
-            particles[i]->resetForce();
-        }
-        
+    
         
         for (int i = 0; i < particles.size(); i++){
             for (int j = 0; j < particles.size(); j++){
                 if (i != j){
                     particles[i]->addForFlocking(*particles[j]);
+                    particles[i]->addAttractionForce(*particles[j], radius, strength);
                 }
             }
          
         for (int i = 0; i < particles.size(); i++){
-            particles[i]->alignment.strength = 0.5;
             particles[i]-> damping = 0.15;
     
             }
@@ -361,12 +318,11 @@ void testApp::update(){
          
         for (int i = 0; i < particles.size(); i++){
             
-           // particles[i]->addAttractionForce(mouseX, mouseY, 1000, 0.5);
             particles[i]->c.set(ofRandom(200,255), ofRandom(100,255), ofRandom(100,255));
             
             for (int j = 0; j < i; j++){
                 if (bRepel){
-                    particles[i]->addRepulsionForce(*particles[j], radius+20, strength);
+                    particles[i]->addRepulsionForce(*particles[j], radius+50, 20);
                 } else {
                     particles[i]->addAttractionForce(*particles[j], radius, strength);
                 }
@@ -375,6 +331,25 @@ void testApp::update(){
         }
         
     }
+    
+    ofPushView();
+    ofPushStyle();
+    
+    ofPushMatrix();
+    
+    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+    ofClear(0, 255);
+    ofSetColor( ofMap( fade , 0.0f, 0.5f, 0.0f, 1.0f, true) * 255,255);
+    
+    ofDisableBlendMode();
+    ofPopMatrix();
+    
+    ofPopView();
+    ofPopStyle();
+    
+    ofSetWindowTitle(ofToString(ofGetFrameRate()));
+
+    
     
     //tail testing
     timePoint temp;
@@ -411,33 +386,30 @@ void testApp::drawFboTest(){
     ofColor black(0, fadeAmnt);
 
     ofBackgroundGradient(dark, black);
-    ofSetColor(255,255,255, fadeAmnt);
+   ofSetColor(255,255,255, fadeAmnt);
     
     if(number== 1) {
         fadeAmnt = 1;
-        ofSetColor(255,255,255, fadeAmnt);
+     //   ofSetColor(255,255,255, fadeAmnt);
         
     }
     
     if(number== 2) {
         fadeAmnt = 60;
-        ofSetColor(255,0,0, fadeAmnt);
+     //   ofSetColor(255,0,0, fadeAmnt);
     }
     
     if(number== 3) {
         fadeAmnt = 30;
-        ofSetColor(0,255,255, fadeAmnt);
+     //   ofSetColor(0,255,255, fadeAmnt);
     }
     
     if(number== 4) {
         fadeAmnt = 5;
-        ofSetColor(10,10,10, fadeAmnt);
+     //   ofSetColor(10,10,10, fadeAmnt);
         
     }
-    
-    ofRect(0,0,ofGetScreenWidth(),ofGetScreenHeight());
-    
-	//2 - Draw graphics
+ 	//2 - Draw graphics
 	
 	for (int i = 0; i < particles.size(); i++){
 		particles[i]->draw();
@@ -448,28 +420,38 @@ void testApp::drawFboTest(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-	
+    ofDrawBitmapString(ofToString(fadeAmnt), 200,0);
     
-    ofSetColor(255,50);
-  
+    ofSetColor(255);
+    ofDrawBitmapString(ofToString(fadeAmnt), 10,430);
+    
+    videoDiffMHI.draw(0, 0);
+    
+    
+    
     rgbaFbo.draw(0,0);
     rgbaFboFloat.draw(0,0);
-  
-    string alphaInfo = "Current alpha fade amnt = " + ofToString(fadeAmnt);
-
     
-  videoDiffMHI.draw(0, 0);
-//	videoGrayscaleCvImage.draw(20,20, 100,80);
+    
+//  videoGrayscaleCvImage.draw(20,20, 100,80);
 //	videoPrevFrameImage.draw(20, 120, 100, 80);
 //	videoDiffImage.draw(20,220,100,80);
 //  ofEnableAlphaBlending();
 //  panel.draw();
+  
     
-    for (int i = 0; i < particles.size(); i++){
-		particles[i]->draw();
-	}
+//    for (int i = 0; i < particles.size(); i++){
+//		particles[i]->draw();
+//	}
+   
 
-    ofDrawBitmapString(alphaInfo, ofPoint(10,430));
+       
+   
+    
+    
+
+    
+
 
 }
 

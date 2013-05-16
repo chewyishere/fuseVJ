@@ -142,36 +142,159 @@ void testApp::update(){
 	while(receiver.hasWaitingMessages()){
 		// get the next message
 		ofxOscMessage m;
+        
+        receiver.getNextMessage(&m);
+        
+        if(m.getAddress() == "/flockmode/1" ){
+            number == 1;
+        }
+        
+        if(m.getAddress() == "/flockmode/2" ){
+            number == 2;
+        }
+
+        if(m.getAddress() == "/flockmode/3" ){
+            number == 3;
+        }
+        
+        if(m.getAddress() == "/flockmode/4" ){
+            number == 4;
+        }
+
+        if(m.getAddress() == "/flockmode/5" ){
+            number == 5;
+        }
+        
+        if(m.getAddress() == "/flockmode/6" ){
+            number == 6;
+        }
+
+        if(m.getAddress() == "/flockmode/7" ){
+            number == 7;
+        }
+        
+        if(m.getAddress() == "/flockmode/8" ){
+            number == 8;
+        }
+        
+        if(m.getAddress() == "/drawmode/1" ){
+            number == 11;
+        }
+
+        if(m.getAddress() == "/drawmode/2" ){
+            number == 12;
+        }
+        
+        if(m.getAddress() == "/drawmode/1" ){
+            number == 11;
+        }
+        
+        if(m.getAddress() == "/drawmode/2" ){
+            number == 12;
+        }
+        
+        if(m.getAddress() == "/drawmode/3" ){
+            number == 13;
+        }
+        
+        if(m.getAddress() == "/drawmode/4" ){
+            number == 14;
+        }
+        
+        if(m.getAddress() == "/drawmode/5" ){
+            number == 15;
+        }
+        
+        if(m.getAddress() == "/drawmode/6" ){
+            number == 16;
+        }
+        
+        if(m.getAddress() == "/drawmode/7" ){
+            number == 17;
+        }
+        
+        if(m.getAddress() == "/drawmode/8" ){
+            number == 9;
+        }
+        
+        if(m.getAddress() == "/fadebar/" ){
+            float fade;
+            fade = m.getArgAsFloat(0);
+            fadeAmnt == ofMap(fade,0,150,0,100);
+        }
+        
+        if(m.getAddress() == "/color" ){
+       
+        }
+        
+        if(m.getAddress() == "/Saturation"){
+            
+            sat = m.getArgAsFloat(0);
+     
+            for (int i = 0; i < funkyPtc.size(); i++){
+                funkyPtc[i].c.set(hue,sat,200);
+            }
+            
+            for (int i = 0; i < flockPtc.size(); i++){
+                flockPtc[i]->c.set(hue,sat,200);
+            }
+            
+        }
+
+
+        if(m.getAddress() == "/allcolor" ){
+            for (int i = 0; i < funkyPtc.size(); i++){
+                funkyPtc[i].c.set(ofRandom(100,250),ofRandom(100,250),ofRandom(10,250));
+        }
+            
+            for (int i = 0; i < flockPtc.size(); i++){
+                flockPtc[i]->c.set(ofRandom(100,250),ofRandom(100,250),ofRandom(10,250));
+            }
+
+        }
+
+        if(m.getAddress() == "/blendmode/1" ){
+            number == 21;
+        }
+        if(m.getAddress() == "/blendmode/2" ){
+            number == 22;
+        }
+
+        if(m.getAddress() == "/blendmode/3" ){
+            number == 23;
+        }
+
+        if(m.getAddress() == "/blendmode/4" ){
+            number == 24;
+        }
+    
+        
+// particles
+        
         float rSmooth;
-		receiver.getNextMessage(&m);
-        for (int i = 0; i < funkyPtc.size(); i++){
+		
+        for (int i = 0; i < flockPtc.size(); i++){
             // check for mouse moved message
             if(m.getAddress() == "/accel/x"){
-            // rSmooth = m.getArgAsFloat(0)/2;
-                particles2[i]->r3 = (m.getArgAsFloat(0)+rSmooth)/2;
-                particles2[i]->vel.x += (m.getArgAsFloat(0)+rSmooth)/2;
+//flocking
+                rSmooth = m.getArgAsFloat(0)/2;
+                flockPtc[i]->r3 = (m.getArgAsFloat(0)+rSmooth)/2;
+                flockPtc[i]->vel.x += (m.getArgAsFloat(0)+rSmooth)/2;
                 accelX = m.getArgAsFloat(0);
             }
 
             if(m.getAddress() == "/accel/y"){
                 rSmooth = m.getArgAsFloat(0)/2;
-<<<<<<< HEAD
-                flockPtc[i]->r2 = (m.getArgAsFloat(0)+rSmooth)/5;
-=======
-                particles2[i]->r2 = (m.getArgAsFloat(0)+rSmooth)/2;
-                particles2[i]->vel.y += (m.getArgAsFloat(0)+rSmooth)/2;
-
->>>>>>> adjustments
+// HEAD
+                flockPtc[i]->r2 = (m.getArgAsFloat(0)+rSmooth)/2;
+                flockPtc[i]->vel.y += (m.getArgAsFloat(0)+rSmooth)/2;
                 accelY = m.getArgAsFloat(0);
             }
              if(m.getAddress() == "/accel/z"){
                  rSmooth = m.getArgAsFloat(0)/2;
-<<<<<<< HEAD
-                 flockPtc[i]->r1 = (m.getArgAsFloat(0)+rSmooth)/5;
-=======
-                 particles2[i]->r1 = (m.getArgAsFloat(0)+rSmooth)/2;
-                  particles2[i]->vel.y = (m.getArgAsFloat(0)+rSmooth)/2;
->>>>>>> adjustments
+                 flockPtc[i]->r1 = (m.getArgAsFloat(0)+rSmooth)/2;
+                 flockPtc[i]->vel.z = (m.getArgAsFloat(0)+rSmooth)/2;
+//adjustments
                  accelZ = m.getArgAsFloat(0);
              }
             
@@ -186,121 +309,42 @@ void testApp::update(){
                 ofClamp(sat, 0, 255);
                 flockPtc[i]->c.setSaturation(sat);
             }
-            
-            
-            else{
-                // unrecognized message: display on the bottom of the screen
-                string msg_string;
-                msg_string = m.getAddress();
-                msg_string += ": ";
-                for(int i = 0; i < m.getNumArgs(); i++){
-                    // get he argument type
-                    msg_string += m.getArgTypeName(i);
-                    msg_string += ":";
-                    // display the argument - make sure we get the right type
-                    if(m.getArgType(i) == OFXOSC_TYPE_INT32){
-                        msg_string += ofToString(m.getArgAsInt32(i));
-                    }
-                    else if(m.getArgType(i) == OFXOSC_TYPE_FLOAT){
-                        msg_string += ofToString(m.getArgAsFloat(i));
-                    }
-                    else if(m.getArgType(i) == OFXOSC_TYPE_STRING){
-                        msg_string += m.getArgAsString(i);
-                    }
-                    else{
-                        msg_string += "unknown";
-                    }
-                }
-                // add to the list of strings to display
-                msg_strings[current_msg_string] = msg_string;
-                timers[current_msg_string] = ofGetElapsedTimef() + 5.0f;
-                current_msg_string = (current_msg_string + 1) % NUM_MSG_STRINGS;
-                // clear the next line
-                msg_strings[current_msg_string] = "";
-            }
-            
         }
         
-	}
-    cout << "accel " + ofToString(accelX) + " , "
-                     + ofToString(accelY) + " , "
-                    + ofToString(accelZ) + "\n";
-    
-    ofPushView();
-    ofPushStyle();
-    
-    ofPushMatrix();
-    
-    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-    ofClear(0, 255);
-    ofSetColor( ofMap( fade , 0.0f, 0.5f, 0.0f, 1.0f, true) * 255,255);
-
-    
-    ofDisableBlendMode();
-    ofPopMatrix();
-    
-    ofPopView();
-    ofPopStyle();
-    
-    ofSetWindowTitle(ofToString(ofGetFrameRate()));
-    
-    //osc
-    
-    // hide old messages
-	for(int i = 0; i < NUM_MSG_STRINGS; i++){
-		if(timers[i] < ofGetElapsedTimef()){
-			msg_strings[i] = "";
-		}
-	}
-    
-	// check for waiting messages
-	while(receiver.hasWaitingMessages()){
-		// get the next message
-		ofxOscMessage m;
-		receiver.getNextMessage(&m);
         for (int i = 0; i < funkyPtc.size(); i++){
-            // check for mouse moved message
-            if(m.getAddress() == "/accel/x"){
-<<<<<<< HEAD
-                funkyPtc[i].r3 = m.getArgAsFloat(0);
-               // funkyPtc[i].vel.x += m.getArgAsFloat(0);
-=======
-                particles[i].r3 = m.getArgAsFloat(0);
-                particles[i].vel.x += m.getArgAsFloat(0);
->>>>>>> adjustments
-            cout << m.getArgAsFloat(0) << endl;
-            }
+//funky             
+                if(m.getAddress() == "/accel/x"){
+// HEAD
+                    
+                    funkyPtc[i].r3 = m.getArgAsFloat(0);
+                    funkyPtc[i].vel.x += m.getArgAsFloat(0);
+// adjustments
+                    cout << m.getArgAsFloat(0) << endl;
+                }
+                
+                if(m.getAddress() == "/accel/y"){
+// HEAD
+                    funkyPtc[i].r2 = m.getArgAsFloat(0);
+                    funkyPtc[i].vel.y += m.getArgAsFloat(0);
+                }
             
-            if(m.getAddress() == "/accel/y"){
-<<<<<<< HEAD
-                funkyPtc[i].r2 = m.getArgAsFloat(0);
-            //    funkyPtc[i].vel.y += m.getArgAsFloat(0);
-            }
-            
-            if(m.getAddress() == "/accel/z"){
-                funkyPtc[i].r1 = m.getArgAsFloat(0);
-            //    funkyPtc[i].vel.z += m.getArgAsFloat(0);
-=======
-                particles[i].r2 = m.getArgAsFloat(0);
-                particles[i].vel.y += m.getArgAsFloat(0);
-            }
-            
-            if(m.getAddress() == "/accel/z"){
-                particles[i].r1 = m.getArgAsFloat(0);
-                particles[i].vel.z += m.getArgAsFloat(0);
->>>>>>> adjustments
-            }
-            
-            
-            if(m.getAddress() == "/hue"){
-                funkyPtc[i].c.setHue(m.getArgAsFloat(0));
-            }
-            
-            if(m.getAddress() == "/sat"){
-                funkyPtc[i].c.setSaturation(m.getArgAsFloat(0));
-            }
-            
-            
+    
+                if(m.getAddress() == "/accel/z"){
+                    funkyPtc[i].r1 = m.getArgAsFloat(0);
+                    funkyPtc[i].vel.z += m.getArgAsFloat(0);
+// adjustments
+                }
+                
+                
+                if(m.getAddress() == "/hue"){
+                    funkyPtc[i].c.setHue(m.getArgAsFloat(0));
+                }
+                
+                if(m.getAddress() == "/sat"){
+                    funkyPtc[i].c.setSaturation(m.getArgAsFloat(0));
+                }
+        
+
             else{
                 // unrecognized message: display on the bottom of the screen
                 string msg_string;
@@ -335,15 +379,13 @@ void testApp::update(){
         }
         
 	}
-    
+
     
     // number == 1 +++++++++++++++++++++++++++++++++++++
     
     
     if(number==1) {
-        
-        // background funkyPtc
-        
+              
         sort( flockPtc.begin(), flockPtc.end(), comparisonFunction );
         
         for (int i = 0; i < flockPtc.size(); i++){
@@ -357,11 +399,6 @@ void testApp::update(){
         }
         
         
-        for (int i = 0; i < flockPtc.size(); i++){
-            flockPtc[i]->resetForce();
-        }
-        
-               
         for (int i = 0; i < flockPtc.size(); i++){
             for (int j = i-1; j >= 0; j--){
                 if ( fabs(flockPtc[j]->pos.x - flockPtc[i]->pos.x) >	50) break;
@@ -416,14 +453,7 @@ void testApp::update(){
         
         }
         
-        
-        for (int i = 0; i < flockPtc.size(); i++){
-            flockPtc[i]->addFlockingForce();
-            flockPtc[i]->addDampingForce();
-            flockPtc[i]->update();
-        }
-        
-        
+          
         // wrap torroidally.
         for (int i = 0; i < flockPtc.size(); i++){
             ofVec2f pos = flockPtc[i]->pos;
@@ -464,22 +494,13 @@ void testApp::update(){
             }
        
         }
-        
-        for (int i = 0; i < flockPtc.size(); i++){
-            flockPtc[i]->addFlockingForce();
-            flockPtc[i]->addDampingForce();
-            flockPtc[i]->update();
-        }
-        
-        
-        
-        
-         }
+
+    }
     // number == 4   +++++++++++++++++++++++++++++++++++++
     
     if(number == 4) {
         
-        // background funkyPtc
+       
         
         sort( flockPtc.begin(), flockPtc.end(), comparisonFunction );
         
@@ -491,11 +512,6 @@ void testApp::update(){
             flockPtc[i]->seperation.strength = 0.46;
             flockPtc[i]->seperation.distance = 200;
             flockPtc[i]->damping = 0.45;
-        }
-        
-        
-        for (int i = 0; i < flockPtc.size(); i++){
-            flockPtc[i]->resetForce();
         }
         
         
@@ -565,18 +581,7 @@ void testApp::update(){
             flockPtc[i]->update();
         }
         
-        
-//        // wrap torroidally.
-//        for (int i = 0; i < flockPtc.size(); i++){
-//            ofVec2f pos = flockPtc[i]->pos;
-//            if (pos.x < 0) pos.x = ofGetWidth();
-//            if (pos.x > ofGetWidth()) pos.x = 0;
-//            if (pos.y < 0) pos.y = ofGetHeight();
-//            if (pos.y > ofGetHeight()) pos.y = 0;
-//            flockPtc[i]->pos = pos;
-//        }
-//        
-        
+      
       }
     
     
@@ -584,7 +589,6 @@ void testApp::update(){
     
     
         if(number == 6) {
-            // background funkyPtc
             
             sort( flockPtc.begin(), flockPtc.end(), comparisonFunction );
             
@@ -717,7 +721,7 @@ void testApp::update(){
             flockPtc[i]->update();
         }
         
-        
+    
     }
 
     
@@ -998,12 +1002,34 @@ void testApp::update(){
         
     }
     
-    
-    
+cout << "accel " + ofToString(accelX) + " , "
++ ofToString(accelY) + " , "
++ ofToString(accelZ) + "\n";
+
+ofPushView();
+ofPushStyle();
+
+ofPushMatrix();
+
+ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+ofClear(0, 255);
+ofSetColor( ofMap( fade , 0.0f, 0.5f, 0.0f, 1.0f, true) * 255,255);
+
+
+ofDisableBlendMode();
+ofPopMatrix();
+
+ofPopView();
+ofPopStyle();
+
+ofSetWindowTitle(ofToString(ofGetFrameRate()));
+
+
+
 
     //tail testing
     timePoint temp;
-    
+
   	temp.t = ofGetElapsedTimef() - startTime;
 	pts.push_back(temp);
 	
@@ -1025,11 +1051,7 @@ void testApp::drawFboTest(){
 		ofClear(255,255,255, 0);
 	}
     
-    //1 - Fade Fbo
-	
-	//this is where we fade the fbo
-	//by drawing a rectangle the size of the fbo with a small alpha value, we can slowly fade the current contents of the fbo.
-  
+
    ofFill();
   
    ofColor dark(10,fadeAmnt);
@@ -1046,7 +1068,6 @@ void testApp::drawFboTest(){
     if(number == 7) fadeAmnt = 0;
     if(number == 8) fadeAmnt = 20;
     if(number == 9) fadeAmnt = 20;
-    
     if(number == 10) fadeAmnt = 5;
     if(number == 12) fadeAmnt = 100;
     
@@ -1091,47 +1112,6 @@ void testApp::draw(){
    
 //        ofDrawBitmapString(reportString, 30, 30);
    }
-    
-//    +
-//    "\n 1 = flows "
-//    +
-//    "\n 2 = funky "
-//    +
-//    "\n 3 = happy "
-//    +
-//    "\n 4 = colorful lines "
-//    +
-//    "\n 5 = groups "
-//    +
-//    "\n 6 = straight "
-//    +
-//    "\n 7 = combine ";
-//    
-//    
-//    string reportString2 =
-//    
-//    "\n front visual  " + ofToString(smoothedVol)
-//    +
-//    "\n default = drawing volum (size) "
-//    +
-//    "\n q = rythem (white) "
-//    +
-//    "\n w = orchastral (expend)"
-//    +
-//    "\n e = electrical (tint + damping + red) "
-//    +
-//    "\n r=  funky (seperate)  "
-//    +
-//    "\n t = soul (drift) "
-//    +
-//    "\n y = stop / erase "
-//    +
-//    "\n u =  fill up screen";
-    
-    
-//	ofSetColor(40,40,0);
-//	ofRect(10,10,320,150);
-//	ofSetColor(255,255,255);
 
 //  ofDrawBitmapString(reportString2, 1100, 30);
    
@@ -1244,52 +1224,12 @@ void testApp::mouseDragged(int x, int y, int button){
    funkyPtc.push_back(myParticle);
     
     
-    if (number == 11){
-        for (int i = 0; i < funkyPtc.size(); i++){
-            funkyPtc[i].c.setHsb(hue,sat,200);
-        }
-        
-    }
-    
-    if (number == 12){
+    if (10< number < 11){
         for (int i = 0; i < funkyPtc.size(); i++){
             funkyPtc[i].c.setHsb((ofRandom(hue-40),(hue+40)),sat,200);
-            
-        }
-    }
-    
-    if (number == 13){
-        for (int i = 0; i < funkyPtc.size(); i++){
-    }
-    }
-    
-    if (number == 14){
-        for (int i = 0; i < funkyPtc.size(); i++){
-            //funkyPtc[i].c.set(ofRandom(100,255),255 ,255,90);
         }
         
     }
-    
-    if (number == 15){
-        for (int i = 0; i < funkyPtc.size(); i++){
-           // funkyPtc[i].c.set(255, ofRandom(100,255), 255,90);
-        }
-        
-    }
-    if (number == 16){
-        for (int i = 0; i < funkyPtc.size(); i++){
-            //funkyPtc[i].c.set(255, 0, ofRandom(100,255),90);
-        }
-        
-    }
-    
-    if (number == 17){
-        for (int i = 0; i < funkyPtc.size(); i++){
-           // funkyPtc[i].c.set(ofRandom(0,100),ofRandom(0,100), 0,90);
-        }
-        
-    }
-    
 
 }
 
