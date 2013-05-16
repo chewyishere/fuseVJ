@@ -7,7 +7,7 @@
 #include "particle.h"
 
 #include "ofxOsc.h"
-#define PORT 9000
+#define PORT 12345
 #define NUM_MSG_STRINGS 20u 
 
 

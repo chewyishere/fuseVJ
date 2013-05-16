@@ -142,85 +142,85 @@ void testApp::update(){
 	while(receiver.hasWaitingMessages()){
 		// get the next message
 		ofxOscMessage m;
-        
         receiver.getNextMessage(&m);
-        
         if(m.getAddress() == "/flockmode/1" ){
-            number == 1;
+            if(m.getArgAsInt32(0)==1);
+            number = 1;
         }
         
         if(m.getAddress() == "/flockmode/2" ){
-            number == 2;
+            if(m.getArgAsInt32(0)==1);
+            number = 2;
         }
 
         if(m.getAddress() == "/flockmode/3" ){
-            number == 3;
+            number = 3;
         }
         
         if(m.getAddress() == "/flockmode/4" ){
-            number == 4;
+            number = 4;
         }
 
         if(m.getAddress() == "/flockmode/5" ){
-            number == 5;
+            number = 5;
         }
         
         if(m.getAddress() == "/flockmode/6" ){
-            number == 6;
+            number = 6;
         }
 
         if(m.getAddress() == "/flockmode/7" ){
-            number == 7;
+            number = 7;
         }
         
         if(m.getAddress() == "/flockmode/8" ){
-            number == 8;
+            number = 8;
         }
         
         if(m.getAddress() == "/drawmode/1" ){
-            number == 11;
+            number = 11;
         }
 
         if(m.getAddress() == "/drawmode/2" ){
-            number == 12;
+            number = 12;
         }
         
         if(m.getAddress() == "/drawmode/1" ){
-            number == 11;
+            number = 11;
         }
         
         if(m.getAddress() == "/drawmode/2" ){
-            number == 12;
+            number = 12;
         }
         
         if(m.getAddress() == "/drawmode/3" ){
-            number == 13;
+            number = 13;
         }
         
         if(m.getAddress() == "/drawmode/4" ){
-            number == 14;
+            number = 14;
         }
         
         if(m.getAddress() == "/drawmode/5" ){
-            number == 15;
+            number = 15;
         }
         
         if(m.getAddress() == "/drawmode/6" ){
-            number == 16;
+            number = 16;
         }
         
         if(m.getAddress() == "/drawmode/7" ){
-            number == 17;
+            number = 17;
         }
         
         if(m.getAddress() == "/drawmode/8" ){
-            number == 9;
+            number = 9;
         }
         
         if(m.getAddress() == "/fadebar/" ){
             float fade;
             fade = m.getArgAsFloat(0);
-            fadeAmnt == ofMap(fade,0,150,0,100);
+            fadeAmnt = ofMap(fade,0,150,0,100);
         }
         
         if(m.getAddress() == "/color" ){
@@ -254,18 +254,18 @@ void testApp::update(){
         }
 
         if(m.getAddress() == "/blendmode/1" ){
-            number == 21;
+            number = 21;
         }
         if(m.getAddress() == "/blendmode/2" ){
-            number == 22;
+            number = 22;
         }
 
         if(m.getAddress() == "/blendmode/3" ){
-            number == 23;
+            number = 23;
         }
 
         if(m.getAddress() == "/blendmode/4" ){
-            number == 24;
+            number = 24;
         }
     
         
@@ -1002,9 +1002,9 @@ void testApp::update(){
         
     }
     
-cout << "accel " + ofToString(accelX) + " , "
-+ ofToString(accelY) + " , "
-+ ofToString(accelZ) + "\n";
+//cout << "accel " + ofToString(accelX) + " , "
+//+ ofToString(accelY) + " , "
+//+ ofToString(accelZ) + "\n";
 
 ofPushView();
 ofPushStyle();
@@ -1224,7 +1224,7 @@ void testApp::mouseDragged(int x, int y, int button){
    funkyPtc.push_back(myParticle);
     
     
-    if (10< number < 11){
+    if (10< number < 18){
         for (int i = 0; i < funkyPtc.size(); i++){
             funkyPtc[i].c.setHsb((ofRandom(hue-40),(hue+40)),sat,200);
         }

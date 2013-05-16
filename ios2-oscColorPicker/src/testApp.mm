@@ -5,7 +5,7 @@ void testApp::setup(){
 	ofSetOrientation(OF_ORIENTATION_90_LEFT);
 	ofxAccelerometer.setup();
     
-    ip =  "169.254.92.237";
+    ip =  "169.254.228.253";
     sender.setup( ip, PORT );
 	ofSetFrameRate(60);
     ofEnableSmoothing();
@@ -72,10 +72,10 @@ void testApp::update(){
 		m.addIntArg( ofGetFrameNum() );
 		sender.sendMessage( m );
 	}
-    if (!iosKeyboard->isKeyboardShowing()) {
-        ip = iosKeyboard->getText();
-    }
-    
+//    if (!iosKeyboard->isKeyboardShowing()) {
+//        ip = iosKeyboard->getText();
+//    }
+//    
 
     
 }
@@ -198,102 +198,141 @@ void testApp::guiEvent(ofxUIEventArgs &e){
 //        bool val = (bool) res[2];
 //        cout << name << " <<<<<< " << row << " " << col << " " << val << endl;
         
-        ofxOscMessage m;
         // trigger false to reset everytimes
         // because of ToggleMatrix's setAllowMultiple(false);
         for (int i = 0; i<8; i++) bFlockMode[i] = false;
         // then whatever clicked is true! yess!
+        
+        
+       //  for (int i = 0; i<8; i++) {
+         
         if      (row == 0 && col == 0){
-            bFlockMode[0] = true;
-            m.setAddress( "/flockmode/1" );
-            m.addIntArg(0);
+             
+             ofxOscMessage m;
+             bFlockMode[0] = true;
+             m.setAddress( "/flockmode/1" );
+               m.addIntArg(bFlockMode[0]);
+              sender.sendMessage( m );
+                        
         }
         else if (row == 1 && col == 0){
+             ofxOscMessage m;
             bFlockMode[1] = true;
             m.setAddress( "/flockmode/2" );
-            m.addIntArg(0);
+            m.addIntArg(bFlockMode[1]);
+             sender.sendMessage( m );
         }
         else if (row == 2 && col == 0){
+             ofxOscMessage m;
             bFlockMode[2] = true;
             m.setAddress( "/flockmode/3" );
-            m.addIntArg(0);
+            m.addIntArg(bFlockMode[2]);
+            sender.sendMessage( m );
         }
         else if (row == 3 && col == 0){
+             ofxOscMessage m;
             bFlockMode[3] = true;
             m.setAddress( "/flockmode/4" );
-            m.addIntArg(0);
+            m.addIntArg(bFlockMode[3]);
+            sender.sendMessage( m );
         }
         else if (row == 0 && col == 1){
+             ofxOscMessage m;
             bFlockMode[4] = true;
             m.setAddress( "/flockmode/5" );
-            m.addIntArg(0);
+            m.addIntArg(bFlockMode[4]);
+            sender.sendMessage( m );
+
         }
         else if (row == 1 && col == 1){
+             ofxOscMessage m;
             bFlockMode[5] = true;
             m.setAddress( "/flockmode/6" );
-            m.addIntArg(0);
+            m.addIntArg(bFlockMode[5]);
+            sender.sendMessage( m );
         }
         else if (row == 2 && col == 1){
+              ofxOscMessage m;
             bFlockMode[6] = true;
+            m.addIntArg(bFlockMode[6]);
             m.setAddress( "/flockmode/7" );
-            m.addIntArg(0);
+                    sender.sendMessage( m );
+            
         }
         else if (row == 3 && col == 1){
+              ofxOscMessage m;
             bFlockMode[7] = true;
+              
             m.setAddress( "/flockmode/8" );
-            m.addIntArg(0);
+              m.addIntArg(bFlockMode[7]);
+                sender.sendMessage( m );
         }
-		sender.sendMessage( m );
-        
+    
+
+    
     }
     else if(ofIsStringInString(name, "DRAWMODE")){
         vector<int> res =  getToggleMatrixValues(name, e);
         int row = res[0];
         int col = res[1];
         
-        ofxOscMessage m;
         for (int i = 0; i<8; i++) bDrawMode[i] = false;
         if      (row == 0 && col == 0){
+            ofxOscMessage m;
             bDrawMode[0] = true;
             m.setAddress( "/drawmode/1" );
-            m.addIntArg(0);
+            m.addIntArg(bDrawMode[0]);
+            sender.sendMessage( m );
         }
         else if (row == 1 && col == 0){
+            ofxOscMessage m;
             bDrawMode[1] = true;
             m.setAddress( "/drawmode/2" );
-            m.addIntArg(0);
+            m.addIntArg(bDrawMode[1]);
+            sender.sendMessage( m );
         }
         else if (row == 2 && col == 0){
+            ofxOscMessage m;
             bDrawMode[2] = true;
             m.setAddress( "/drawmode/3" );
-            m.addIntArg(0);
+            m.addIntArg(bDrawMode[2]);
+            sender.sendMessage( m );
         }
         else if (row == 3 && col == 0){
+            ofxOscMessage m;
             bDrawMode[3] = true;
             m.setAddress( "/drawmode/4" );
-            m.addIntArg(0);
+            m.addIntArg(bDrawMode[3]);
+            sender.sendMessage( m );
         }
         else if (row == 0 && col == 1){
+            ofxOscMessage m;
             bDrawMode[4] = true;
             m.setAddress( "/drawmode/5" );
-            m.addIntArg(0);
+            m.addIntArg(bDrawMode[4]);
+            sender.sendMessage( m );
         }
         else if (row == 1 && col == 1){
+            ofxOscMessage m;
             bDrawMode[5] = true;
             m.setAddress( "/drawmode/6" );
-            m.addIntArg(0);
+            m.addIntArg(bDrawMode[5]);
+            sender.sendMessage( m );
         }
         else if (row == 2 && col == 1){
+            ofxOscMessage m;
             bDrawMode[6] = true;
             m.setAddress( "/drawmode/7" );
-            m.addIntArg(0);
+            m.addIntArg(bDrawMode[6]);
+            sender.sendMessage( m );
         }
         else if (row == 3 && col == 1){
+            ofxOscMessage m;
             bDrawMode[7] = true;
             m.setAddress( "/drawmode/8" );
-            m.addIntArg(0);
+            m.addIntArg(bDrawMode[7]);
+            sender.sendMessage( m );
         }
-		sender.sendMessage( m );
 	}
 	else if(name == "FADE"){
 		ofxUISlider *slider = (ofxUISlider *) e.widget;
@@ -347,29 +386,35 @@ void testApp::guiEvent(ofxUIEventArgs &e){
         int col = res[1];
         
         
-        ofxOscMessage m;
         for (int i = 0; i<4; i++) bBlendMode[i] = false;
         if      (row == 0 && col == 0){
+            ofxOscMessage m;
             bBlendMode[0] = true;
             m.setAddress( "/blendmode/1" );
-            m.addIntArg(0);
+            m.addIntArg(bBlendMode[0]);
+            sender.sendMessage( m );
         }
         else if (row == 1 && col == 0){
+            ofxOscMessage m;
             bBlendMode[1] = true;
             m.setAddress( "/blendmode/2" );
-            m.addIntArg(0);
+            m.addIntArg(bBlendMode[1]);
+            sender.sendMessage( m );
         }
         else if (row == 2 && col == 0){
+            ofxOscMessage m;
             bBlendMode[2] = true;
             m.setAddress( "/blendmode/3" );
-            m.addIntArg(0);
+            m.addIntArg(bBlendMode[2]);
+            sender.sendMessage( m );
         }
         else if (row == 3 && col == 0){
+            ofxOscMessage m;
             bBlendMode[3] = true;
             m.setAddress( "/blendmode/4" );
-            m.addIntArg(0);
+            m.addIntArg(bBlendMode[3]);
+            sender.sendMessage( m );
         }
-		sender.sendMessage( m );
 
     }
 //    else if(name == "IP"){
