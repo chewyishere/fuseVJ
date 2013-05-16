@@ -422,7 +422,7 @@ void testApp::drawFboTest(){
 void testApp::draw(){
     ofDrawBitmapString(ofToString(fadeAmnt), 200,0);
     
-    ofSetColor(255);
+    ofSetColor(255); 
     ofDrawBitmapString(ofToString(fadeAmnt), 10,430);
     
     videoDiffMHI.draw(0, 0);
