@@ -5,7 +5,7 @@
 #include "ofxiPhoneExtras.h"
 #include "ofxOsc.h"
 
-#define HOST "92.168.1.131."
+#define HOST "192.168.1.125"
 #define PORT 12345
 
 class testApp : public ofxiPhoneApp {

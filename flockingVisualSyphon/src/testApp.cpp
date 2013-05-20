@@ -1,6 +1,9 @@
 #include "testApp.h"
 
 
+const int width = 1024;
+const int height = 768;
+
 // comparison routine for sort...
 bool comparisonFunction(  particle * a, particle * b ) {
 	return a->pos.x < b->pos.x;
@@ -78,7 +81,17 @@ void testApp::setup(){
     scaledVol		= 0.0;
     
 	soundStream.setup(this, 0, 2, 44100, bufferSize, 4);
-    bDrawMouse = false;
+    
+    
+    //syphon
+    
+	mainOutputSyphonServer.setName("Screen Output");
+	individualTextureSyphonServer.setName("Texture Output");
+	mClient.setup();
+    mClient.setApplicationName("Simple Server");
+    mClient.setServerName("");
+    tex.allocate(width, height, GL_RGBA);
+
 }
 
 //--------------------------------------------------------------
@@ -1095,7 +1108,14 @@ void testApp::drawFboTest(){
 
 
 //--------------------------------------------------------------
-void testApp::draw(){ 
+void testApp::draw(){
+    
+    // Clear with alpha, so we can capture via syphon and composite elsewhere should we want.
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //
+    
+    
     
     ofSetColor(255, 50);
     rgbaFbo.draw(0,0);
@@ -1105,14 +1125,6 @@ void testApp::draw(){
     ofEnableBlendMode(blendMode);
 
 
-    if (bDrawMouse){
-        ofFill();
-        ofSetColor(255,200);
-        ofCircle(mouseX, mouseY, 5);
-        ofNoFill();
-        ofSetColor(255, 0, 0, 100);
-        ofCircle(mouseX, mouseY, 5);
-    }
     string alphaInfo = "Current alpha fade amnt = " + ofToString(fadeAmnt);
    
     for (int i = 0; i < flockPtc.size(); i++){
@@ -1129,6 +1141,25 @@ void testApp::draw(){
 //  ofDrawBitmapString(reportString2, 1100, 30);
    
 
+    
+    // draw static into our one texture.
+    unsigned char pixels[200*100*4];
+    for (int i = 0; i < 200*100*4; i++){
+        pixels[i] = (int)(255 * ofRandomuf());
+    }
+    tex.loadData(pixels, 200, 100, GL_RGBA);
+    tex.draw(50, 50);
+    
+    
+	// Syphon Stuff
+    ofSetColor(255, 255, 255);
+    ofEnableAlphaBlending();
+    mClient.draw(50, 50);
+	mainOutputSyphonServer.publishScreen();
+    individualTextureSyphonServer.publishTexture(&tex);
+    ofDrawBitmapString("Note this text is not captured by Syphon since it is drawn after publishing.\nYou can use this to hide your GUI for example.", 150,500);
+    
+    
 }
 
 
@@ -1207,11 +1238,8 @@ void testApp::keyPressed(int key){
         numberBlend = 6;
 	}
     if( key == 'f') ofToggleFullscreen();
-    if( key == 'g'){
-        CGDisplayHideCursor(kCGDirectMainDisplay);
-        bDrawMouse = !bDrawMouse;
-    }
-    
+    if( key == 'g') CGDisplayHideCursor(kCGDirectMainDisplay);
+
 }
 
 //--------------------------------------------------------------

@@ -5,7 +5,7 @@ void testApp::setup(){
 	ofSetOrientation(OF_ORIENTATION_90_LEFT);
 	ofxAccelerometer.setup();
     
-    ip =  "169.254.228.253";
+    ip =  "192.168.2.9";
     sender.setup( ip, PORT );
 	ofSetFrameRate(60);
     ofEnableSmoothing();

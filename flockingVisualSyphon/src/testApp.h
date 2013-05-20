@@ -1,12 +1,12 @@
 #pragma once
-#define RECT_NUM 250
 #define PARTICLE_NUM 200
 
 #include "ofMain.h"
 #include "timePoint.h"
 #include "particle.h"
-
 #include "ofxOsc.h"
+#include "ofxSyphon.h"
+
 #define PORT 12345
 #define NUM_MSG_STRINGS 20
 
@@ -91,6 +91,17 @@ public:
     float timers[NUM_MSG_STRINGS];
     
     float hue,sat;
-    bool bDrawMouse;
+    
+    
+    
+    
+    //syphon
+    
+    ofTexture tex;
+    
+	ofxSyphonServer mainOutputSyphonServer;
+	ofxSyphonServer individualTextureSyphonServer;
+	
+	ofxSyphonClient mClient;
     
 };

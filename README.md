@@ -1,7 +1,7 @@
-Avsys+SensemakerFinal
+fuseVJ
 ===========
 
-collaboration of Chewy, Yinan and Firm
+collaboration of Chewy and Firm
 
 A series of performance tools for audio/visual performance jamming
 
@@ -17,14 +17,3 @@ PARTIes
 PARTIcles
 
 PARTIcipants
-
-
-1. oscRecieverAbleton --> Music control Visual (original panel disabled,
-since I don't know how to change values into the slider so I faked another Ableton panel to show the values)  
-
-2. oscSenderAbleton --> Visual control Music 
-
-3. OpenCV test: try to effect RepulsionForce and FlockingForce with gesture. (Not sure how?) 
-
-Question:
-How to combine with Kinect / OpenCV so people can interactive / contain the visual from their body??
